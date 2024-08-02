@@ -1,0 +1,410 @@
+﻿using InterShopAPI.Models;
+using System.Security.Cryptography;
+using System.Text;
+
+namespace InterShopAPI.Libs
+{
+    /// <summary>
+    /// Утилитарный класс для добавления тестовых данных в БД
+    /// </summary>
+    public static class TestData
+    {
+        public static InterShopContext Context { get; set; }
+
+        /// <summary>
+        /// Метод. Добавляет данные для всех таблиц 
+        /// </summary>
+        /// <param name="context"></param>
+        public static void AddData(InterShopContext? context = null)
+        {
+            AddCategories(context);
+            AddProducts(context);
+            AddProductVariants(context);
+            AddPriceHistory(context);
+            AddDiscountHistory(context);
+            AddDataTypes(context);
+            AddUnits(context);
+            AddCharacteristics(context);
+            AddCategoryCharacteristics(context);
+            AddCharacteristicValueSet(context);
+            AddProductVariantCharacteristics(context);
+            AddRoles(context);
+            AddUsers(context);
+        }
+
+        /// <summary>
+        /// Метод. Добавляет категории в БД
+        /// </summary>
+        /// <param name="context">Контекст БД</param>
+        public static void AddCategories(InterShopContext? context = null)
+        {
+            setContext(context);
+
+            context.Categories.AddRange(new List<Category>
+            {                                                                               // ID:
+                new Category {Name = "Бытовая техника"},                                    // 1 
+                new Category {Name = "ПК, ноутбуки, периферия"},                            // 2
+                new Category {Name = "Комплектующие для ПК"},                               // 3
+
+                new Category { Name = "Ноутбуки", ParentID = 2 },                           // 4
+                new Category { Name = "Мониторы", ParentID = 2 },                           // 5
+                new Category { Name = "Персональные компьютеры", ParentID = 2 },            // 6
+
+                new Category { Name = "Компьютеры для бизнеса", ParentID = 6 },             // 7
+                new Category { Name = "Игровые компьютеры", ParentID = 6 },                 // 8
+                new Category { Name = "Офисные компьютеры", ParentID = 6 }                  // 9
+            });
+
+            context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Метод. Добавляет товары в БД
+        /// </summary>
+        /// <param name="context">Контекст БД</param>
+        public static void AddProducts(InterShopContext? context = null)
+        {
+            setContext(context);
+
+            context.Products.AddRange(new List<Product>
+            {                                                                               // ID:
+                new Product { Name = "Игровой компьютер #1", CategoryID = 8 },              // 1
+                new Product { Name = "Игровой компьютер #2", CategoryID = 8 },              // 2
+                new Product { Name = "Игровой компьютер #3", CategoryID = 8 },              // 3
+                new Product { Name = "Офисный компьютер #1", CategoryID = 9 },              // 4
+                new Product { Name = "Офисный компьютер #2", CategoryID = 9 },              // 5
+                new Product { Name = "Офисный компьютер #3", CategoryID = 9,
+                    PreviewPath = "OfficePC_1.jpg" }                                        // 6
+            });
+
+            context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Метод. Добавляет варианты товаров в БД
+        /// </summary>
+        /// <param name="context">Контекст БД</param>
+        public static void AddProductVariants(InterShopContext? context = null)
+        {
+            setContext(context);
+
+            context.ProductVariants.AddRange(new List<ProductVariant>
+            {                                                                   // ID:                                                                    
+                new ProductVariant { ProductID = 1,                             // 1
+                    InStock = 10,
+                    Name = "Игровой компьютер #1 Базовая версия" },
+                new ProductVariant { ProductID = 1,                             // 2
+                    InStock = 12,
+                    Name = "Игровой компьютер #1 Про-версия"},
+                new ProductVariant { ProductID = 2,                             // 3
+                    InStock = 9,
+                    Name = "Игровой компьютер #2 Базовая версия" },
+                new ProductVariant { ProductID = 2,                             // 4
+                    InStock = 10,
+                    Name = "Игровой компьютер #2 Про-версия"},
+                new ProductVariant { ProductID = 3,                             // 5
+                    InStock = 40,
+                    Name = "Игровой компьютер #3 Базовая версия"},
+                new ProductVariant { ProductID = 4,                             // 6
+                    InStock = 17,
+                    Name = "Офисный компьютер #1 Базовая версия"},
+                new ProductVariant { ProductID = 5,                             // 7
+                    InStock = 17,
+                    Name = "Офисный компьютер #2 Базовая версия"},
+                new ProductVariant { ProductID = 6,                             // 8
+                    InStock = 17,
+                    Name = "Офисный компьютер #3 Базовая версия"}
+            });
+
+            context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Метод. Добавляет типы данных в БД
+        /// </summary>
+        /// <param name="context">Контекст БД</param>
+        public static void AddDataTypes(InterShopContext? context = null)
+        {
+            setContext(context);
+
+            context.DataTypes.AddRange(new List<DataType>
+            {                                                   // ID:
+                new DataType { Name = "Числовой" },             // 1
+                new DataType { Name = "Строковый"},             // 2
+                new DataType { Name = "Список"},                // 3
+            });
+
+            context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Метод. Добавляет единицы измерения в БД
+        /// </summary>
+        /// <param name="context">Контекст БД</param>
+        public static void AddUnits(InterShopContext? context = null)
+        {
+            setContext(context);
+
+            context.Units.AddRange(new List<Unit>
+            {                                                                       // ID:
+                new Unit { Name = "Гб", FullName = "Гигабайт" },                    // 1
+                new Unit { Name = "Мб", FullName = "Мегабайт" },                    // 2
+                new Unit { Name = "Кб", FullName = "Килобайт" },                    // 3
+                new Unit { Name = "Гб/сек", FullName = "Гигабайт в секнуду" },      // 4
+                new Unit { Name = "Мб/сек", FullName = "Мегабайт в секунду" },      // 5
+                new Unit { Name = "Кб/сек", FullName = "Килобайт в всекунду"},      // 6
+                new Unit { Name = "Кг", FullName = "Килограмм" },                   // 7
+                new Unit { Name = "г", FullName = "Грамм" },                        // 8
+                new Unit { Name = "мг", FullName = "Миллиграмм"},                   // 9
+                new Unit { Name = "Вт", FullName = "Ватт"},                         // 10
+                new Unit { Name = "руб", FullName = "Рублей"},                      // 11
+            });
+
+            context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Метод. Добавляет характеристики в БД
+        /// </summary>
+        /// <param name="context">Контекст БД</param>
+        public static void AddCharacteristics(InterShopContext? context = null)
+        {
+            setContext(context);
+
+
+            context.Characteristics.AddRange(new List<Characteristic>
+            {                                                                               // ID:
+                new Characteristic { Name = "Объём ОЗУ", DataTypeID = 1, UnitID = 1 },      // 1
+                new Characteristic { Name = "Объём ПЗУ", DataTypeID = 1, UnitID = 1 },      // 2
+                new Characteristic { Name = "Процессор", DataTypeID = 3 },                  // 3
+                new Characteristic { Name = "Видеокарта", DataTypeID = 3 },                 // 4
+                new Characteristic { Name = "Мощность", DataTypeID = 1, UnitID = 10 },      // 5
+                new Characteristic { Name = "Стоимость", DataTypeID = 1, UnitID = 11 },     // 6
+            });
+
+            context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Метод. Добавляет характеристики категорий в БД
+        /// </summary>
+        /// <param name="context">Контекст БД</param>
+        public static void AddCategoryCharacteristics(InterShopContext? context = null)
+        {
+            setContext(context);
+
+            context.CategoryCharacteristics.AddRange(new List<CategoryCharacteristics>
+            {
+                new CategoryCharacteristics { CategoryId = 7, CharacteristicId = 1 },
+                new CategoryCharacteristics { CategoryId = 7, CharacteristicId = 2 },
+                new CategoryCharacteristics { CategoryId = 7, CharacteristicId = 3 },
+                new CategoryCharacteristics { CategoryId = 7, CharacteristicId = 4 },
+                new CategoryCharacteristics { CategoryId = 7, CharacteristicId = 5 },
+                new CategoryCharacteristics { CategoryId = 7, CharacteristicId = 6 },
+
+                new CategoryCharacteristics { CategoryId = 8, CharacteristicId = 1 },
+                new CategoryCharacteristics { CategoryId = 8, CharacteristicId = 2 },
+                new CategoryCharacteristics { CategoryId = 8, CharacteristicId = 3 },
+                new CategoryCharacteristics { CategoryId = 8, CharacteristicId = 4 },
+                new CategoryCharacteristics { CategoryId = 8, CharacteristicId = 5 },
+                new CategoryCharacteristics { CategoryId = 8, CharacteristicId = 6 },
+
+                new CategoryCharacteristics { CategoryId = 9, CharacteristicId = 1 },
+                new CategoryCharacteristics { CategoryId = 9, CharacteristicId = 2 },
+                new CategoryCharacteristics { CategoryId = 9, CharacteristicId = 3 },
+                new CategoryCharacteristics { CategoryId = 9, CharacteristicId = 4 },
+                new CategoryCharacteristics { CategoryId = 9, CharacteristicId = 5 },
+                new CategoryCharacteristics { CategoryId = 9, CharacteristicId = 6 },
+            });
+
+            context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Метод. Добавляет наборы значений характеристик в БД
+        /// </summary>
+        /// <param name="context">Контекст БД</param>
+        public static void AddCharacteristicValueSet(InterShopContext? context = null)
+        {
+            setContext(context);
+
+
+            context.CharacteristicValueSets.AddRange(new List<CharacteristicValueSet>
+            {                                                                                            // ID:
+                new CharacteristicValueSet { CharacteristicID = 3, Value = "Intel Pentium 4 301" },      // 1
+                new CharacteristicValueSet { CharacteristicID = 3, Value = "AMD Ryzen 5 R104" },         // 2
+                new CharacteristicValueSet { CharacteristicID = 3, Value = "Intel Core I9 12600" },      // 3
+
+                new CharacteristicValueSet { CharacteristicID = 4, Value = "NVidia GTX 4090" },          // 4
+                new CharacteristicValueSet { CharacteristicID = 4, Value = "AMD Radeon HD 6570" },       // 5
+                new CharacteristicValueSet { CharacteristicID = 4, Value = "Intel Graphics 436" },       // 6
+            });
+
+            context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Метод. Добавляет характеристики вариантов товаров в БД
+        /// </summary>
+        /// <param name="context">Контекст БД</param>
+        public static void AddProductVariantCharacteristics(InterShopContext? context = null)
+        {
+            setContext(context);
+            context.ProductVariantsCharacteristics.AddRange(new List<ProductVariantCharacteristics>
+            {
+                new ProductVariantCharacteristics { ProductVariantID = 1, CharacteristicID = 1, Value = "16" },
+                new ProductVariantCharacteristics { ProductVariantID = 1, CharacteristicID = 2, Value = "512" },
+                new ProductVariantCharacteristics { ProductVariantID = 1, CharacteristicID = 3, Value = "Intel Pentium 4 301" },
+                new ProductVariantCharacteristics { ProductVariantID = 1, CharacteristicID = 4, Value = "AMD Radeon HD 6570" },
+                new ProductVariantCharacteristics { ProductVariantID = 1, CharacteristicID = 5, Value = "100" },
+                new ProductVariantCharacteristics { ProductVariantID = 1, CharacteristicID = 6, Value = "10000" },
+
+                new ProductVariantCharacteristics { ProductVariantID = 2, CharacteristicID = 1, Value = "32" },
+                new ProductVariantCharacteristics { ProductVariantID = 2, CharacteristicID = 2, Value = "1024" },
+                new ProductVariantCharacteristics { ProductVariantID = 2, CharacteristicID = 3, Value = "Intel Core I9 12600" },
+                new ProductVariantCharacteristics { ProductVariantID = 2, CharacteristicID = 4, Value = "AMD Radeon HD 6570" },
+                new ProductVariantCharacteristics { ProductVariantID = 2, CharacteristicID = 5, Value = "150" },
+                new ProductVariantCharacteristics { ProductVariantID = 2, CharacteristicID = 6, Value = "15000" },
+
+                new ProductVariantCharacteristics { ProductVariantID = 3, CharacteristicID = 1, Value = "8" },
+                new ProductVariantCharacteristics { ProductVariantID = 3, CharacteristicID = 2, Value = "512" },
+                new ProductVariantCharacteristics { ProductVariantID = 3, CharacteristicID = 3, Value = "Intel Pentium 4 301" },
+                new ProductVariantCharacteristics { ProductVariantID = 3, CharacteristicID = 4, Value = "Intel Graphics 436" },
+                new ProductVariantCharacteristics { ProductVariantID = 3, CharacteristicID = 5, Value = "80" },
+                new ProductVariantCharacteristics { ProductVariantID = 3, CharacteristicID = 6, Value = "80000" },
+
+                new ProductVariantCharacteristics { ProductVariantID = 4, CharacteristicID = 1, Value = "16" },
+                new ProductVariantCharacteristics { ProductVariantID = 4, CharacteristicID = 2, Value = "512" },
+                new ProductVariantCharacteristics { ProductVariantID = 4, CharacteristicID = 3, Value = "AMD Ryzen 5 R104" },
+                new ProductVariantCharacteristics { ProductVariantID = 4, CharacteristicID = 4, Value = "AMD Radeon HD 6570" },
+                new ProductVariantCharacteristics { ProductVariantID = 4, CharacteristicID = 5, Value = "110" },
+                new ProductVariantCharacteristics { ProductVariantID = 4, CharacteristicID = 6, Value = "11000" },
+
+                new ProductVariantCharacteristics { ProductVariantID = 5, CharacteristicID = 1, Value = "16" },
+                new ProductVariantCharacteristics { ProductVariantID = 5, CharacteristicID = 2, Value = "512" },
+                new ProductVariantCharacteristics { ProductVariantID = 5, CharacteristicID = 3, Value = "AMD Ryzen 5 R104" },
+                new ProductVariantCharacteristics { ProductVariantID = 5, CharacteristicID = 4, Value = "NVidia GTX 4090" },
+                new ProductVariantCharacteristics { ProductVariantID = 5, CharacteristicID = 5, Value = "160" },
+                new ProductVariantCharacteristics { ProductVariantID = 5, CharacteristicID = 6, Value = "16000" },
+
+                new ProductVariantCharacteristics { ProductVariantID = 6, CharacteristicID = 1, Value = "8" },
+                new ProductVariantCharacteristics { ProductVariantID = 6, CharacteristicID = 2, Value = "512" },
+                new ProductVariantCharacteristics { ProductVariantID = 6, CharacteristicID = 3, Value = "Intel Pentium 4 301" },
+                new ProductVariantCharacteristics { ProductVariantID = 6, CharacteristicID = 4, Value = "AMD Radeon HD 6570" },
+                new ProductVariantCharacteristics { ProductVariantID = 6, CharacteristicID = 5, Value = "90" },
+                new ProductVariantCharacteristics { ProductVariantID = 6, CharacteristicID = 6, Value = "90000" },
+
+                new ProductVariantCharacteristics { ProductVariantID = 7, CharacteristicID = 1, Value = "8" },
+                new ProductVariantCharacteristics { ProductVariantID = 7, CharacteristicID = 2, Value = "512" },
+                new ProductVariantCharacteristics { ProductVariantID = 7, CharacteristicID = 3, Value = "Intel Pentium 4 301" },
+                new ProductVariantCharacteristics { ProductVariantID = 7, CharacteristicID = 4, Value = "AMD Radeon HD 6570" },
+                new ProductVariantCharacteristics { ProductVariantID = 7, CharacteristicID = 5, Value = "90" },
+                new ProductVariantCharacteristics { ProductVariantID = 7, CharacteristicID = 6, Value = "90000" },
+
+                new ProductVariantCharacteristics { ProductVariantID = 8, CharacteristicID = 1, Value = "8" },
+                new ProductVariantCharacteristics { ProductVariantID = 8, CharacteristicID = 2, Value = "512" },
+                new ProductVariantCharacteristics { ProductVariantID = 8, CharacteristicID = 3, Value = "Intel Pentium 4 301" },
+                new ProductVariantCharacteristics { ProductVariantID = 8, CharacteristicID = 4, Value = "AMD Radeon HD 6570" },
+                new ProductVariantCharacteristics { ProductVariantID = 8, CharacteristicID = 5, Value = "90" },
+                new ProductVariantCharacteristics { ProductVariantID = 8, CharacteristicID = 6, Value = "70000" },
+            });
+
+            context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Метод. Добавляет роли пользователей в БД
+        /// </summary>
+        /// <param name="context">Контекст БД</param>
+        public static void AddRoles(InterShopContext context)
+        {
+            context.Roles.AddRange(new List<Role>
+            {
+                new Role { Name = "User"},
+                new Role { Name = "Moderator"},
+                new Role { Name = "Administrator"}
+            });
+            context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Метод. Добавляет тестовых пользователей в БД
+        /// </summary>
+        /// <param name="context">Контекст БД</param>
+        public static void AddUsers(InterShopContext? context = null)
+        {
+            User user = new User();
+
+            user.Login = "Test";
+            user.Password = "123123123";
+            user.Mail = "а@насрал.рф";
+            user.RoleId = 1;
+            using (var sha = new SHA256Managed())
+            {
+                byte[] textData = Encoding.UTF8.GetBytes(user.Password);
+                user.HashPassword = sha.ComputeHash(textData);
+            }
+            user.JwtToken = LibJWT.CreateToken(user);
+            context.Users.Add(user);
+            context.SaveChangesAsync();
+
+            /////////////////////////////////////////////////////////////////////////////return;
+        }
+
+        /// <summary>
+        /// Метод. Добавляет тестовую историю цен в БД
+        /// </summary>
+        /// <param name="context">Контекст БД</param>
+        public static void AddPriceHistory(InterShopContext? context = null)
+        {
+            setContext(context);
+            context.PriceHistories.AddRange(new List<PriceHistory>()
+            {
+                new PriceHistory { ProductVariantId = 1, Date = DateOnly.Parse("01-01-2015"), Price = 12043.0f },
+                new PriceHistory { ProductVariantId = 2, Date = DateOnly.Parse("01-01-2015"), Price = 12044.0f },
+                new PriceHistory { ProductVariantId = 3, Date = DateOnly.Parse("01-01-2015"), Price = 12045.0f },
+                new PriceHistory { ProductVariantId = 4, Date = DateOnly.Parse("01-01-2015"), Price = 12046.0f },
+                new PriceHistory { ProductVariantId = 5, Date = DateOnly.Parse("01-01-2015"), Price = 12047.0f },
+                new PriceHistory { ProductVariantId = 6, Date = DateOnly.Parse("01-01-2015"), Price = 12048.0f },
+                new PriceHistory { ProductVariantId = 7, Date = DateOnly.Parse("01-01-2015"), Price = 12049.99f },
+                new PriceHistory { ProductVariantId = 8, Date = DateOnly.Parse("01-01-2015"), Price = 14425.0f }
+            });
+
+            context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Метод. Добавляет тестовую историю скидок в БД
+        /// </summary>
+        /// <param name="context">Контекст БД</param>
+        public static void AddDiscountHistory(InterShopContext? context = null)
+        {
+            setContext(context);
+            context.DiscountHistories.AddRange(new List<DiscountHistory>()
+            {
+                new DiscountHistory { ProductId = 1, DateFrom = DateOnly.Parse("01-01-2015"), DateTo = DateOnly.Parse("01-01-2026"), Discount = 12 },
+                new DiscountHistory { ProductId = 2, DateFrom = DateOnly.Parse("01-01-2015"), DateTo = DateOnly.Parse("01-01-2026"), Discount = 20 },
+                new DiscountHistory { ProductId = 3, DateFrom = DateOnly.Parse("01-01-2015"), DateTo = DateOnly.Parse("01-01-2026"), Discount = 42 },
+                new DiscountHistory { ProductId = 4, DateFrom = DateOnly.Parse("01-01-2015"), DateTo = DateOnly.Parse("01-01-2026"), Discount = 10 },
+                new DiscountHistory { ProductId = 5, DateFrom = DateOnly.Parse("01-01-2015"), DateTo = DateOnly.Parse("01-01-2026"), Discount = 10 },
+            });
+
+            context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Метод. Устанавливает контекст БД для всего класса
+        /// </summary>
+        /// <param name="context">Контекст БД</param>
+        private static void setContext(InterShopContext context)
+        {
+            if (context != null)
+            {
+                Context = context;
+            }
+            if (Context is null)
+                throw new Exception("Передайте контекст базы данных в качестве параметра," +
+                    " или установите свойство класса вручную");
+        }
+    }
+}
