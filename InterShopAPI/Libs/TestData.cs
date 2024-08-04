@@ -1,6 +1,7 @@
 ﻿using InterShopAPI.Models;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 
 namespace InterShopAPI.Libs
 {
@@ -333,22 +334,39 @@ namespace InterShopAPI.Libs
         /// <param name="context">Контекст БД</param>
         public static void AddUsers(InterShopContext? context = null)
         {
+            //testJson();
             User user = new User();
+            string password = "123123123123";
 
             user.Login = "Test";
-            user.Password = "123123123";
-            user.Mail = "а@насрал.рф";
+            user.Mail = "test@mail.ru";
             user.RoleId = 1;
             using (var sha = new SHA256Managed())
             {
-                byte[] textData = Encoding.UTF8.GetBytes(user.Password);
-                user.HashPassword = sha.ComputeHash(textData);
+                byte[] textData = Encoding.UTF8.GetBytes(password);
+                user.Password = byteArrayToString(sha.ComputeHash(textData));
             }
-            user.JwtToken = LibJWT.CreateToken(user);
             context.Users.Add(user);
             context.SaveChangesAsync();
+        }
 
-            /////////////////////////////////////////////////////////////////////////////return;
+        private static void testJson()
+        {
+            byte[] array = new byte[] { 0, 1, 133, 12};
+            string json = JsonSerializer.Serialize<byte[]>(array);
+            //string json = "{\"password\":{\"0\":147,\"1\":47,\"2\":60,\"3\":27,\"4\":86,\"5\":37,\"6\":124,\"7\":232,\"8\":83,\"9\":154,\"10\":194,\"11\":105,\"12\":215,\"13\":170,\"14\":180,\"15\":37,\"16\":80,\"17\":218,\"18\":207,\"19\":136,\"20\":24,\"21\":208,\"22\":117,\"23\":240,\"24\":189,\"25\":241,\"26\":153,\"27\":5,\"28\":98,\"29\":170,\"30\":227,\"31\":239}}";
+            byte[] bytes = JsonSerializer.Deserialize<byte[]>(json);
+        }
+
+        private static string byteArrayToString(byte[] array)
+        {
+            StringBuilder builder = new StringBuilder();
+            foreach(byte num in array)
+            {
+                builder.Append(num);
+            }
+
+            return builder.ToString();
         }
 
         /// <summary>

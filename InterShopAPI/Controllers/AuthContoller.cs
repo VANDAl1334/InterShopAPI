@@ -13,10 +13,10 @@ using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using InterShopAPI.Models;
+using InterShopAPI.Libs;
 
 namespace InterShopAPI.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
     {
@@ -35,9 +35,11 @@ namespace InterShopAPI.Controllers
         // POST: api/Auth
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        [Route("api/[controller]/Register")]
+        [Route("api/auth/Register")]
         public async Task<ActionResult<User>> Register(User user)
         {
+            user.Password = byteArrayToString(Convert.FromBase64String(user.Password));
+            user.Role = _context.Roles.FirstOrDefault(u => u.Name == "User");
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
             var response = new
@@ -46,6 +48,17 @@ namespace InterShopAPI.Controllers
             };
 
             return CreatedAtAction("Register", new { id = user.Id }, response);
+        }
+
+        private string byteArrayToString(byte[] array)
+        {
+            StringBuilder builder = new StringBuilder();
+            foreach(byte num in array)
+            {
+                builder.Append(num);
+            }
+
+            return builder.ToString();
         }
 
 
@@ -58,16 +71,17 @@ namespace InterShopAPI.Controllers
         // POST: api/Auth
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        [Route("api/[controller]/Login")]
-        public async Task<ActionResult<User>> Login(string login, string password)
+        [Route("api/auth/Login")]
+        public async Task<ActionResult> Login(User? user)
         {
+            string passwordString = byteArrayToString(Convert.FromBase64String(user.Password));
             // Поикс пользователя в БД по логину и хэшу пароля
-            User? user = await _context.Users.FirstOrDefaultAsync(x => x.Login == login && x.Password == password);
+            user = await _context.Users.FirstOrDefaultAsync(x => x.Login == user.Login && x.Password == passwordString);
 
             // Если пользователь не найден - возвращается код 404
             if (user == null)
             {
-                return NotFound();
+                return Conflict(user.Password);
             }
 
             // Если пользователь найден - создаётся токен
@@ -78,7 +92,7 @@ namespace InterShopAPI.Controllers
                 audience: AuthOptions.AUDIENCE,
                 claims: claims,
                 expires: DateTime.UtcNow.Add(TimeSpan.FromDays(2)),
-                signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256)
+                signingCredentials: new SigningCredentials(LibJWT.ExtendKeyLengthIfNeeded(AuthOptions.GetSymmetricSecurityKey(), 256), SecurityAlgorithms.HmacSha256)
             );
 
             // Запись токена и получение хэша токена

@@ -30,12 +30,12 @@ namespace InterShopAPI.Libs
             }
             return key;
         }
-        public static bool CheckToken(string token, InterShopContext context)
-        {
-            User? user = context.Users.FirstOrDefault(u => u.JwtToken == token);
-            if (user == null)
-                return false;            
-            return true;
-        }
+        // public static bool CheckToken(string token, InterShopContext context)
+        // {
+        //     User? user = context.Users.FirstOrDefault(u => u.JwtToken == token);
+        //     if (user == null)
+        //         return false;            
+        //     return true;
+        // }
     }
 }
