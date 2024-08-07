@@ -68,14 +68,14 @@ namespace InterShopAPI.Libs
             setContext(context);
 
             context.Products.AddRange(new List<Product>
-            {                                                                               // ID:
-                new Product { Name = "Игровой компьютер #1", CategoryID = 8 },              // 1
-                new Product { Name = "Игровой компьютер #2", CategoryID = 8 },              // 2
-                new Product { Name = "Игровой компьютер #3", CategoryID = 8 },              // 3
-                new Product { Name = "Офисный компьютер #1", CategoryID = 9 },              // 4
-                new Product { Name = "Офисный компьютер #2", CategoryID = 9 },              // 5
-                new Product { Name = "Офисный компьютер #3", CategoryID = 9,
-                    PreviewPath = "OfficePC_1.jpg" }                                        // 6
+            {                                                                                                                         // ID:
+                new Product { Name = "Игровой компьютер #1", CategoryID = 8, Description="Супер комп #1", OnSale=true },              // 1
+                new Product { Name = "Игровой компьютер #2", CategoryID = 8, Description="Супер комп #1", OnSale=true },              // 2
+                new Product { Name = "Игровой компьютер #3", CategoryID = 8, Description="Супер комп #1", OnSale=true },              // 3
+                new Product { Name = "Офисный компьютер #1", CategoryID = 9, Description="Супер комп #1", OnSale=true },              // 4
+                new Product { Name = "Офисный компьютер #2", CategoryID = 9, Description="Супер комп #1", OnSale=true },              // 5
+                new Product { Name = "Офисный компьютер #3", CategoryID = 9, Description="Супер комп #1", OnSale=true,
+                    PreviewPath = "OfficePC_1.jpg" }                                                                                  // 6
             });
 
             context.SaveChanges();
@@ -92,28 +92,20 @@ namespace InterShopAPI.Libs
             context.ProductVariants.AddRange(new List<ProductVariant>
             {                                                                   // ID:                                                                    
                 new ProductVariant { ProductID = 1,                             // 1
-                    InStock = 10,
                     Name = "Игровой компьютер #1 Базовая версия" },
                 new ProductVariant { ProductID = 1,                             // 2
-                    InStock = 12,
                     Name = "Игровой компьютер #1 Про-версия"},
                 new ProductVariant { ProductID = 2,                             // 3
-                    InStock = 9,
                     Name = "Игровой компьютер #2 Базовая версия" },
                 new ProductVariant { ProductID = 2,                             // 4
-                    InStock = 10,
                     Name = "Игровой компьютер #2 Про-версия"},
                 new ProductVariant { ProductID = 3,                             // 5
-                    InStock = 40,
                     Name = "Игровой компьютер #3 Базовая версия"},
                 new ProductVariant { ProductID = 4,                             // 6
-                    InStock = 17,
                     Name = "Офисный компьютер #1 Базовая версия"},
                 new ProductVariant { ProductID = 5,                             // 7
-                    InStock = 17,
                     Name = "Офисный компьютер #2 Базовая версия"},
                 new ProductVariant { ProductID = 6,                             // 8
-                    InStock = 17,
                     Name = "Офисный компьютер #3 Базовая версия"}
             });
 
@@ -334,7 +326,6 @@ namespace InterShopAPI.Libs
         /// <param name="context">Контекст БД</param>
         public static void AddUsers(InterShopContext? context = null)
         {
-            //testJson();
             User user = new User();
             string password = "123123123123";
 
@@ -350,14 +341,11 @@ namespace InterShopAPI.Libs
             context.SaveChangesAsync();
         }
 
-        private static void testJson()
-        {
-            byte[] array = new byte[] { 0, 1, 133, 12};
-            string json = JsonSerializer.Serialize<byte[]>(array);
-            //string json = "{\"password\":{\"0\":147,\"1\":47,\"2\":60,\"3\":27,\"4\":86,\"5\":37,\"6\":124,\"7\":232,\"8\":83,\"9\":154,\"10\":194,\"11\":105,\"12\":215,\"13\":170,\"14\":180,\"15\":37,\"16\":80,\"17\":218,\"18\":207,\"19\":136,\"20\":24,\"21\":208,\"22\":117,\"23\":240,\"24\":189,\"25\":241,\"26\":153,\"27\":5,\"28\":98,\"29\":170,\"30\":227,\"31\":239}}";
-            byte[] bytes = JsonSerializer.Deserialize<byte[]>(json);
-        }
-
+        /// <summary>
+        /// Метод. Преобразует массив байт в строку 
+        /// </summary>
+        /// <param name="array">Массив байт</param>
+        /// <returns>Строковое значение массива</returns>
         private static string byteArrayToString(byte[] array)
         {
             StringBuilder builder = new StringBuilder();
@@ -378,14 +366,14 @@ namespace InterShopAPI.Libs
             setContext(context);
             context.PriceHistories.AddRange(new List<PriceHistory>()
             {
-                new PriceHistory { ProductVariantId = 1, Date = DateOnly.Parse("01-01-2015"), Price = 12043.0f },
-                new PriceHistory { ProductVariantId = 2, Date = DateOnly.Parse("01-01-2015"), Price = 12044.0f },
-                new PriceHistory { ProductVariantId = 3, Date = DateOnly.Parse("01-01-2015"), Price = 12045.0f },
-                new PriceHistory { ProductVariantId = 4, Date = DateOnly.Parse("01-01-2015"), Price = 12046.0f },
-                new PriceHistory { ProductVariantId = 5, Date = DateOnly.Parse("01-01-2015"), Price = 12047.0f },
-                new PriceHistory { ProductVariantId = 6, Date = DateOnly.Parse("01-01-2015"), Price = 12048.0f },
-                new PriceHistory { ProductVariantId = 7, Date = DateOnly.Parse("01-01-2015"), Price = 12049.99f },
-                new PriceHistory { ProductVariantId = 8, Date = DateOnly.Parse("01-01-2015"), Price = 14425.0f }
+                new PriceHistory { ProductVariantId = 1, Date = DateOnly.Parse("01-01-2022"), Price = 12043.0f },
+                new PriceHistory { ProductVariantId = 2, Date = DateOnly.Parse("01-01-2022"), Price = 12044.0f },
+                new PriceHistory { ProductVariantId = 3, Date = DateOnly.Parse("01-01-2022"), Price = 12045.0f },
+                new PriceHistory { ProductVariantId = 4, Date = DateOnly.Parse("01-01-2022"), Price = 12046.0f },
+                new PriceHistory { ProductVariantId = 5, Date = DateOnly.Parse("01-01-2022"), Price = 12047.0f },
+                new PriceHistory { ProductVariantId = 6, Date = DateOnly.Parse("01-01-2022"), Price = 12048.0f },
+                new PriceHistory { ProductVariantId = 7, Date = DateOnly.Parse("01-01-2022"), Price = 12049.99f },
+                new PriceHistory { ProductVariantId = 8, Date = DateOnly.Parse("01-01-2022"), Price = 14425.0f }
             });
 
             context.SaveChanges();
@@ -400,11 +388,11 @@ namespace InterShopAPI.Libs
             setContext(context);
             context.DiscountHistories.AddRange(new List<DiscountHistory>()
             {
-                new DiscountHistory { ProductId = 1, DateFrom = DateOnly.Parse("01-01-2015"), DateTo = DateOnly.Parse("01-01-2026"), Discount = 12 },
-                new DiscountHistory { ProductId = 2, DateFrom = DateOnly.Parse("01-01-2015"), DateTo = DateOnly.Parse("01-01-2026"), Discount = 20 },
-                new DiscountHistory { ProductId = 3, DateFrom = DateOnly.Parse("01-01-2015"), DateTo = DateOnly.Parse("01-01-2026"), Discount = 42 },
-                new DiscountHistory { ProductId = 4, DateFrom = DateOnly.Parse("01-01-2015"), DateTo = DateOnly.Parse("01-01-2026"), Discount = 10 },
-                new DiscountHistory { ProductId = 5, DateFrom = DateOnly.Parse("01-01-2015"), DateTo = DateOnly.Parse("01-01-2026"), Discount = 10 },
+                new DiscountHistory { ProductId = 1, DateFrom = DateOnly.Parse("01-01-2022"), DateTo = DateOnly.Parse("01-01-2026"), Discount = 12 },
+                new DiscountHistory { ProductId = 2, DateFrom = DateOnly.Parse("01-01-2022"), DateTo = DateOnly.Parse("01-01-2026"), Discount = 20 },
+                new DiscountHistory { ProductId = 3, DateFrom = DateOnly.Parse("01-01-2019"), DateTo = DateOnly.Parse("01-01-2026"), Discount = 42 },
+                new DiscountHistory { ProductId = 4, DateFrom = DateOnly.Parse("01-01-2022"), DateTo = DateOnly.Parse("01-01-2026"), Discount = 10 },
+                new DiscountHistory { ProductId = 5, DateFrom = DateOnly.Parse("01-01-2022"), DateTo = DateOnly.Parse("01-01-2026"), Discount = 10 },
             });
 
             context.SaveChanges();

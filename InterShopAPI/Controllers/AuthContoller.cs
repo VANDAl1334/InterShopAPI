@@ -17,6 +17,9 @@ using InterShopAPI.Libs;
 
 namespace InterShopAPI.Controllers
 {
+    /// <summary>
+    /// Класс контроллера для аутентификации и регистрации пользователей в системе
+    /// </summary>
     [ApiController]
     public class AuthController : ControllerBase
     {
@@ -50,6 +53,11 @@ namespace InterShopAPI.Controllers
             return CreatedAtAction("Register", new { id = user.Id }, response);
         }
 
+        /// <summary>
+        /// Метод. Преобразует массив байт в строку
+        /// </summary>
+        /// <param name="array"><Массив байт/param>
+        /// <returns>Строка</returns>/
         private string byteArrayToString(byte[] array)
         {
             StringBuilder builder = new StringBuilder();

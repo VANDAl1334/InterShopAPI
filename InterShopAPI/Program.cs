@@ -9,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 string connection = "Host=localhost;Port=5432;Database=InterShop;Username=postgres";
 builder.Configuration.GetConnectionString("DefaultConnection");
 InterShopContext.ConnectionString = connection;
+
+builder.Services.AddMvcCore().AddDataAnnotations();
 builder.Services.AddDbContext<InterShopContext>(options => options.UseNpgsql(connection));
 
 builder.Services.AddControllers();
@@ -18,21 +20,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            // ��������� �� ��, ����� �� �������������� �������� ��� ��������� ������
             ValidateIssuer = true,
-            //������, �������������� ��������
-            ValidIssuer = "ElectroWallet",
+            ValidIssuer = AuthOptions.ISSUER,
 
-            // ����� �� �������������� ����������� ������
             ValidateAudience = true,
-            // ��������� ����������� ������
-            ValidAudience = "ElectroWalletClient",
+            ValidAudience = AuthOptions.AUDIENCE,
 
-            // ����� �� �������������� ����� �������������
             ValidateLifetime = true,
-            // ��������� ����� ������������
             IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
-            // ��������� ����� ������������
             ValidateIssuerSigningKey = true,
         };
     });
@@ -62,9 +57,9 @@ app.Run();
 
 public class AuthOptions
 {
-    public const string ISSUER = "InterShop"; // �������� ������
-    public const string AUDIENCE = "InterShopClient"; // ����������� ������
-    const string KEY = "mysupersecret_secretkey!123";   // ���� ��� ��������
+    public const string ISSUER = "InterShop"; 
+    public const string AUDIENCE = "InterShopClient"; 
+    const string KEY = "mysupersecret_secretkey!123";  
     public static SymmetricSecurityKey GetSymmetricSecurityKey() =>
         new SymmetricSecurityKey(Encoding.UTF8.GetBytes(KEY));
 }

@@ -14,16 +14,20 @@ namespace InterShopAPI.Models
         /// <summary>
         /// Модель пользователя с его свойствами
         /// </summary>
-        public int Id { get; set; } // Идентификационный номер
+        public int Id { get; set; }
+
         [StringLength(30, MinimumLength = 4)]
-        public string? Login { get; set; } // Регистрационное имя (автоматическое)
-        //[Required(ErrorMessage = "Обязательное поле")]
+        public string? Login { get; set; }
+
         [StringLength(50, ErrorMessage = "Минимум 4 символа ", MinimumLength = 4)]
         public string? Mail { get; set; } // Почта
+
         [Required(ErrorMessage = "Обязательное поле")]
         [StringLength(256, ErrorMessage = "Минимум 8", MinimumLength = 11)]
         public string Password { get; set; } // Хеш пароля
+
         public int RoleId { get; set; }
+        
         public Role? Role { get; set; }
     }
     
