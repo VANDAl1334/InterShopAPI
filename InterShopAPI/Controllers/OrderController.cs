@@ -20,10 +20,10 @@ public class OrderController : ControllerBase
     /// </summary>
     /// <param name="dateTime">Дата и время заказа</param>
     /// <returns></returns>
-    public bool ValidateDateTime(DateTime dateTime)
-    {
-        if(dateTime < DateTime.Parse("01-01-2020"))
-            return false;
-        return true;
-    }
+    // public bool ValidateDateTime(DateTime dateTime)
+    // {
+    //     if(dateTime < DateTime.Parse("01-01-2020"))
+    //         return false;
+    //     return true;
+    // }
 }

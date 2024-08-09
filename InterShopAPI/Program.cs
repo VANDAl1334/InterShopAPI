@@ -13,7 +13,11 @@ InterShopContext.ConnectionString = connection;
 builder.Services.AddMvcCore().AddDataAnnotations();
 builder.Services.AddDbContext<InterShopContext>(options => options.UseNpgsql(connection));
 
-builder.Services.AddControllers();
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(options =>
+        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

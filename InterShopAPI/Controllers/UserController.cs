@@ -27,16 +27,21 @@ namespace InterShopAPI.Controllers
             _context = context;
         }
 
-        // GET: api/Auth
-        [Authorize]
+        // GET: api/User
+        //[Authorize]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<User>>> GetUsers(string roleName)
         {
-            return await _context.Users.ToListAsync();
+            bool roleExists = _context.Roles.Any(x => x.Name == roleName);
+            
+            if(!roleExists)
+                return BadRequest();
+
+            return await _context.Users.Where(p => p.Role.Name == roleName).ToListAsync();
         }
 
-        // GET: api/Auth/5
-        [Authorize]
+        // GET: api/User/5
+        //[Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(int id)
         {
@@ -59,7 +64,7 @@ namespace InterShopAPI.Controllers
             {
                 return BadRequest();
             }
-
+    
             _context.Entry(user).State = EntityState.Modified;
 
             try
