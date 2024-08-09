@@ -52,6 +52,15 @@ namespace InterShopAPI.Controllers
 
             return CreatedAtAction("Register", new { id = user.Id }, response);
         }
+        [HttpPost]
+        [Route("api/auth/LoginExists")]
+        public async Task<ActionResult<User>> LoginExists(User user)
+        {
+            if (!_context.Users.Any(u => u.Login == user.Login))
+                return Conflict();
+            else
+                return Ok();
+        }
 
         /// <summary>
         /// Метод. Преобразует массив байт в строку
@@ -61,7 +70,7 @@ namespace InterShopAPI.Controllers
         private string byteArrayToString(byte[] array)
         {
             StringBuilder builder = new StringBuilder();
-            foreach(byte num in array)
+            foreach (byte num in array)
             {
                 builder.Append(num);
             }
