@@ -20,6 +20,7 @@ namespace InterShopAPI.Libs
         {
             AddCategories(context);
             AddProducts(context);
+            AddImagesOfProduct(context);
             AddProductVariants(context);
             AddPriceHistory(context);
             AddDiscountHistory(context);
@@ -31,6 +32,25 @@ namespace InterShopAPI.Libs
             AddProductVariantCharacteristics(context);
             AddRoles(context);
             AddUsers(context);
+        }
+
+        private static void AddImagesOfProduct(InterShopContext? context)
+        {
+            setContext(context);
+
+            context.ImagesOfProducts.AddRange(new List<ImagesOfProduct>
+            {                                                                               // ID:
+                new ImagesOfProduct() { Path = "we32fs.jpg", ProductId = 1},
+                new ImagesOfProduct() { Path = "we33fs.jpg", ProductId = 1},
+                new ImagesOfProduct() { Path = "we34fs.jpg", ProductId = 1},
+                new ImagesOfProduct() { Path = "we31fs.jpg", ProductId = 2},
+                new ImagesOfProduct() { Path = "we35fs.jpg", ProductId = 2},
+                new ImagesOfProduct() { Path = "we36fs.jpg", ProductId = 3},
+                new ImagesOfProduct() { Path = "we37fs.jpg", ProductId = 4},                  // 9
+                new ImagesOfProduct() { Path = "we38fs.jpg", ProductId = 6}
+            });
+
+            context.SaveChanges();
         }
 
         /// <summary>
@@ -68,14 +88,14 @@ namespace InterShopAPI.Libs
             setContext(context);
 
             context.Products.AddRange(new List<Product>
-            {                                                                                                                         // ID:
-                new Product { Name = "Игровой компьютер #1", CategoryID = 8, Description="Супер комп #1", OnSale=true },              // 1
-                new Product { Name = "Игровой компьютер #2", CategoryID = 8, Description="Супер комп #1", OnSale=true },              // 2
-                new Product { Name = "Игровой компьютер #3", CategoryID = 8, Description="Супер комп #1", OnSale=true },              // 3
-                new Product { Name = "Офисный компьютер #1", CategoryID = 9, Description="Супер комп #1", OnSale=true },              // 4
-                new Product { Name = "Офисный компьютер #2", CategoryID = 9, Description="Супер комп #1", OnSale=true },              // 5
+            {                                                                                                                                           // ID:
+                new Product { Name = "Игровой компьютер #1", CategoryID = 8, Description="Супер комп #1", OnSale=false, IsDeleted = true },             // 1
+                new Product { Name = "Игровой компьютер #2", CategoryID = 8, Description="Супер комп #1", OnSale=true, IsDeleted = true },              // 2
+                new Product { Name = "Игровой компьютер #3", CategoryID = 8, Description="Супер комп #1", OnSale=true },                                // 3
+                new Product { Name = "Офисный компьютер #1", CategoryID = 9, Description="Супер комп #1", OnSale=false },                               // 4
+                new Product { Name = "Офисный компьютер #2", CategoryID = 9, Description="Супер комп #1", OnSale=true },                                // 5
                 new Product { Name = "Офисный компьютер #3", CategoryID = 9, Description="Супер комп #1", OnSale=true,
-                    PreviewPath = "OfficePC_1.jpg" }                                                                                  // 6
+                    PreviewPath = "OfficePC_1.jpg" }                                                                                                    // 6
             });
 
             context.SaveChanges();
@@ -92,21 +112,21 @@ namespace InterShopAPI.Libs
             context.ProductVariants.AddRange(new List<ProductVariant>
             {                                                                   // ID:                                                                    
                 new ProductVariant { ProductID = 1,                             // 1
-                    Name = "Игровой компьютер #1 Базовая версия" },
+                    Name = "Игровой компьютер #1 Базовая версия", IsMain = true },
                 new ProductVariant { ProductID = 1,                             // 2
                     Name = "Игровой компьютер #1 Про-версия"},
                 new ProductVariant { ProductID = 2,                             // 3
-                    Name = "Игровой компьютер #2 Базовая версия" },
+                    Name = "Игровой компьютер #2 Базовая версия", IsMain = true },
                 new ProductVariant { ProductID = 2,                             // 4
                     Name = "Игровой компьютер #2 Про-версия"},
                 new ProductVariant { ProductID = 3,                             // 5
-                    Name = "Игровой компьютер #3 Базовая версия"},
+                    Name = "Игровой компьютер #3 Базовая версия", IsMain = true},
                 new ProductVariant { ProductID = 4,                             // 6
-                    Name = "Офисный компьютер #1 Базовая версия"},
+                    Name = "Офисный компьютер #1 Базовая версия", IsMain = true},
                 new ProductVariant { ProductID = 5,                             // 7
-                    Name = "Офисный компьютер #2 Базовая версия"},
+                    Name = "Офисный компьютер #2 Базовая версия", IsMain = true},
                 new ProductVariant { ProductID = 6,                             // 8
-                    Name = "Офисный компьютер #3 Базовая версия"}
+                    Name = "Офисный компьютер #3 Базовая версия", IsMain = true}
             });
 
             context.SaveChanges();
@@ -349,7 +369,7 @@ namespace InterShopAPI.Libs
         private static string byteArrayToString(byte[] array)
         {
             StringBuilder builder = new StringBuilder();
-            foreach(byte num in array)
+            foreach (byte num in array)
             {
                 builder.Append(num);
             }

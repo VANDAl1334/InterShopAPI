@@ -20,10 +20,10 @@ public class PriceHistoryController : ControllerBase
     /// </summary>
     /// <param name="date">Дата изменения цены</param>
     /// <returns></returns>
-    public bool ValidateDate(DateOnly date)
-    {
-        if (date < DateOnly.Parse("01-01-2020"))
-            return false;
-        return true;
-    }
+    // public bool ValidateDate(DateOnly date)
+    // {
+    //     if (date < DateOnly.Parse("01-01-2020"))
+    //         return false;
+    //     return true;
+    // }
 }

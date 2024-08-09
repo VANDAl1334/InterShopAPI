@@ -16,6 +16,8 @@ namespace InterShopAPI.Models
 
         public bool IsDeleted { get; set; }
 
+        public bool IsMain { get; set; }
+
         public virtual ICollection<PriceHistory> PriceHistories { get; set; }
         public virtual Product Product { get; set; }
         public virtual ICollection<ProductVariantCharacteristics> ProductVariantCharacteristics { get; set; }

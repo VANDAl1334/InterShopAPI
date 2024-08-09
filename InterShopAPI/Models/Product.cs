@@ -15,9 +15,9 @@ namespace InterShopAPI.Models
 
         public string? Description { get; set; }
 
-        public int CategoryID { get; set; } 
+        public int CategoryID { get; set; }
 
-        public string? PreviewPath { get; set; } = "Default.jpg";
+        public string? PreviewPath { get; set; } = "Default.png";
 
         public bool IsDeleted { get; set; }
 
@@ -25,5 +25,7 @@ namespace InterShopAPI.Models
 
         public Category? Category { get; set; }
         public virtual ICollection<DiscountHistory> DiscountHistories { get; set; }
+        public virtual ICollection<ProductVariant> ProductVariants { get; set; }
+        public virtual ICollection<ImagesOfProduct> ImagesOfProduct { get; set;}
     }
 }
