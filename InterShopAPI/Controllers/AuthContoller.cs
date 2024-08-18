@@ -91,6 +91,7 @@ namespace InterShopAPI.Controllers
         [Route("api/auth/Login")]
         public async Task<ActionResult> Login(User? user)
         {
+            string ket = Request.Headers["tokenApi"];
             string passwordString = byteArrayToString(Convert.FromBase64String(user.Password));
             // Поикс пользователя в БД по логину и хэшу пароля
             user = await _context.Users.FirstOrDefaultAsync(x => x.Login == user.Login && x.Password == passwordString);

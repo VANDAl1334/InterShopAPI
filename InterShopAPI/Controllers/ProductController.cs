@@ -29,10 +29,10 @@ public class ProductController : ControllerBase
 
         if (nameFilter == null)
             nameFilter = string.Empty;
-            
+
         IEnumerable<Product> products = _context.Products
             .Where(p => (p.CategoryID == categoryId || (categoryId == 0))
-                && (p.Name.Contains(nameFilter) || (nameFilter == string.Empty))
+                && (p.Name.ToLower().Contains(nameFilter.ToLower()) || (nameFilter == string.Empty))
                 && (p.IsDeleted == false || deleted)
                 && (p.OnSale == true || notSales))
                 .Include(p => p.ProductVariants.Where(p => p.IsMain || variants))
@@ -48,5 +48,26 @@ public class ProductController : ControllerBase
         IEnumerable<ProductDTO> productsDto = _mapper.Map<IEnumerable<ProductDTO>>(products);
 
         return Ok(productsDto);
+    }
+
+    [HttpGet("{id}")]
+    public IActionResult GetProduct(int id)
+    {
+        Product? product = _context.Products
+            .Where(p => p.Id == id)
+            .Include(p => p.ProductVariants)
+                    .ThenInclude(p => p.ProductVariantCharacteristics).ThenInclude(p => p.Characteristic)
+            .Include(p => p.ProductVariants)
+                .ThenInclude(p => p.PriceHistories)
+            .Include(p => p.ImagesOfProduct)
+            .Include(p => p.Category)
+            .Include(p => p.DiscountHistories)
+            .Include(p => p.Comments)
+                .ThenInclude(p => p.User)
+            .FirstOrDefault();
+
+        ProductDTO productDto = _mapper.Map<ProductDTO>(product);
+
+        return Ok(productDto);
     }
 }

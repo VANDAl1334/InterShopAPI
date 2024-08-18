@@ -26,6 +26,7 @@ namespace InterShopAPI.Models
         public Category? Category { get; set; }
         public virtual ICollection<DiscountHistory> DiscountHistories { get; set; }
         public virtual ICollection<ProductVariant> ProductVariants { get; set; }
-        public virtual ICollection<ImagesOfProduct> ImagesOfProduct { get; set;}
+        public virtual ICollection<ImagesOfProduct> ImagesOfProduct { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; }
     }
 }
