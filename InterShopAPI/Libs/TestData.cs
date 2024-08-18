@@ -32,6 +32,25 @@ namespace InterShopAPI.Libs
             AddProductVariantCharacteristics(context);
             AddRoles(context);
             AddUsers(context);
+            AddComments(context);
+        }
+
+        private static void AddComments(InterShopContext context)
+        {
+            context.Comments.AddRange(
+                new List<Comment>()
+                {
+                    new Comment() { UserId = 1, ProductId = 2, Message = "Кал.", DateTime = DateTime.UtcNow, Rating = 5 },
+                    new Comment() { UserId = 1, ProductId = 2, Message = "Кал.", DateTime = DateTime.UtcNow, Rating = 5 },
+                    new Comment() { UserId = 1, ProductId = 3, Message = "Кал.", DateTime = DateTime.UtcNow, Rating = 1 },
+                    new Comment() { UserId = 1, ProductId = 3, Message = "Кал.", DateTime = DateTime.UtcNow, Rating = 3 },
+                    new Comment() { UserId = 1, ProductId = 4, Message = "Кал.", DateTime = DateTime.UtcNow, Rating = 1 },
+                    new Comment() { UserId = 1, ProductId = 4, Message = "Кал.", DateTime = DateTime.UtcNow, Rating = 2 },
+                    new Comment() { UserId = 1, ProductId = 5, Message = "Кал.", DateTime = DateTime.UtcNow, Rating = 3 },
+                }
+            );
+
+            context.SaveChanges();
         }
 
         private static void AddImagesOfProduct(InterShopContext? context)
