@@ -14,6 +14,9 @@ using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using InterShopAPI.Models;
 using InterShopAPI.Libs;
+using NuGet.Protocol;
+using InterShopAPI.DTO;
+using AutoMapper;
 
 namespace InterShopAPI.Controllers
 {
@@ -21,13 +24,16 @@ namespace InterShopAPI.Controllers
     /// Класс контроллера для аутентификации и регистрации пользователей в системе
     /// </summary>
     [ApiController]
+    [Route("api/auth/")]
     public class AuthController : ControllerBase
     {
         private readonly InterShopContext _context;
+        private readonly IMapper _mapper;
 
-        public AuthController(InterShopContext context)
+        public AuthController(InterShopContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -38,25 +44,21 @@ namespace InterShopAPI.Controllers
         // POST: api/Auth
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        [Route("api/auth/Register")]
-        public async Task<ActionResult<User>> Register(User user)
+        [Route("Register")]
+        public async Task<ActionResult<User>> Register(UserDetailDTO userDTO)
         {
-            user.Password = byteArrayToString(Convert.FromBase64String(user.Password));
+            User user = _mapper.Map<User>(userDTO);
+            user.Password = byteArrayToString(Convert.FromBase64String(user.Password));            
             user.Role = _context.Roles.FirstOrDefault(u => u.Name == "User");
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
-            var response = new
-            {
-                userData = user
-            };
-
-            return CreatedAtAction("Register", new { id = user.Id }, response);
+            return Created();            
         }
         [HttpPost]
-        [Route("api/auth/LoginExists")]
+        [Route("LoginExists")]
         public async Task<ActionResult<User>> LoginExists(User user)
         {
-            if (!_context.Users.Any(u => u.Login == user.Login))
+            if (_context.Users.Any(u => u.Login == user.Login))
                 return Conflict();
             else
                 return Ok();
@@ -78,7 +80,27 @@ namespace InterShopAPI.Controllers
             return builder.ToString();
         }
 
+        [HttpGet]
+        [Route("Authorize")]
+        public ActionResult Authorize()
+        {
+            try
+            {
+                string TokenKey = Request.Headers["Authorization"];
+                TokenKey = TokenKey.Replace("Bearer ", "");
+                JwtSecurityTokenHandler tokenHandler = new();
+                JwtSecurityToken tokenIsLogin = tokenHandler.ReadJwtToken(TokenKey);
+                string login = tokenIsLogin.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Name).Value;
+                UserMinimalDTO userDTO = _mapper.Map<UserMinimalDTO>(_context.Users.FirstOrDefault(l => l.Login == login));
+                var response = new
+                {
+                    userJson = userDTO
+                };
+                return Ok(response);
+            }
+            catch { return Conflict(); }
 
+        }
         /// <summary>
         /// POST-метод для аутентификации пользователя по логину и паролю
         /// </summary>
@@ -88,23 +110,24 @@ namespace InterShopAPI.Controllers
         // POST: api/Auth
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        [Route("api/auth/Login")]
-        public async Task<ActionResult> Login(User? user)
+        [Route("Login")]
+        public async Task<ActionResult> Login(UserDetailDTO? userDTO)
         {
-            string passwordString = byteArrayToString(Convert.FromBase64String(user.Password));
+            string passwordString = byteArrayToString(Convert.FromBase64String(userDTO.Password));
+            User user = new();
             // Поикс пользователя в БД по логину и хэшу пароля
-            user = await _context.Users.FirstOrDefaultAsync(x => x.Login == user.Login && x.Password == passwordString);
+            user = await _context.Users.FirstOrDefaultAsync(x => x.Login == userDTO.Login && x.Password == passwordString);
 
             // Если пользователь не найден - возвращается код 404
             if (user == null)
             {
-                return Conflict(user.Password);
+                return NotFound();
             }
 
             // Если пользователь найден - создаётся токен
             List<Claim> claims = new List<Claim>() { new Claim(ClaimTypes.Name, user.Login) };
 
-            JwtSecurityToken token = new JwtSecurityToken(
+            JwtSecurityToken token = new(
                 issuer: AuthOptions.ISSUER,
                 audience: AuthOptions.AUDIENCE,
                 claims: claims,
@@ -115,14 +138,12 @@ namespace InterShopAPI.Controllers
             // Запись токена и получение хэша токена
             string encodedJwt = new JwtSecurityTokenHandler().WriteToken(token);
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
-
             // Передача хэша токена и информации о пользователе в ответ
             var response = new
             {
                 accessToken = encodedJwt,
-                userData = user
             };
-
+            // HttpContext.Response.Cookies.Append("alalhToken", accessToken); //добавление token в Cookie        
             return AcceptedAtAction("Login", new { id = user.Id }, response);
         }
     }

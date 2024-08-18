@@ -20,9 +20,9 @@ namespace InterShopAPI.Models
         public string Login { get; set; }
         [StringLength(50, ErrorMessage = "Минимум 6 символов", MinimumLength = 6)]
         public string? Mail { get; set; } // Почта
-        [Required(ErrorMessage = "Обязательное поле")]
+        //[Required(ErrorMessage = "Обязательное поле")]
         [StringLength(256, ErrorMessage = "Минимум 10", MinimumLength = 10)]
-        public string Password { get; set; } // Хеш пароля
+        public string? Password { get; set; } // Хеш пароля
         public int RoleId { get; set; }
         public Role? Role { get; set; }
     }   
