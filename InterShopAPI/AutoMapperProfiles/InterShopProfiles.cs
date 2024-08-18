@@ -21,5 +21,6 @@ public class InterShopProfiles : Profile
         CreateMap<DiscountHistory, DiscountHistoryDTO>(); 
         CreateMap<ProductVariantCharacteristics, ProductVariantCharacteristicsDTO>()
             .ForMember(dest => dest.Characteristic, option => option.MapFrom(src => src.Characteristic.Name));
+            //test commit
     }
 }
