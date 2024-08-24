@@ -48,11 +48,12 @@ namespace InterShopAPI.Controllers
         public async Task<ActionResult<User>> Register(UserDetailDTO userDTO)
         {
             User user = _mapper.Map<User>(userDTO);
-            user.Password = byteArrayToString(Convert.FromBase64String(user.Password));            
+            user.Password = byteArrayToString(Convert.FromBase64String(user.Password));
             user.Role = _context.Roles.FirstOrDefault(u => u.Name == "User");
+            user.InstanseMail = false;
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
-            return Created();            
+            return Created();
         }
         [HttpPost]
         [Route("LoginExists")]
@@ -79,28 +80,28 @@ namespace InterShopAPI.Controllers
 
             return builder.ToString();
         }
-
+        public string TokenIsLogin()
+        {
+            string TokenKey = Request.Headers["Authorization"];
+            TokenKey = TokenKey.Replace("Bearer ", "");
+            JwtSecurityTokenHandler tokenHandler = new();
+            JwtSecurityToken tokenIsLogin = tokenHandler.ReadJwtToken(TokenKey);
+            string login = tokenIsLogin.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Name).Value;
+            return login;
+        }
         [HttpGet]
         [Route("Authorize")]
         public ActionResult Authorize()
         {
             try
             {
-                string TokenKey = Request.Headers["Authorization"];
-                TokenKey = TokenKey.Replace("Bearer ", "");
-                JwtSecurityTokenHandler tokenHandler = new();
-                JwtSecurityToken tokenIsLogin = tokenHandler.ReadJwtToken(TokenKey);
-                string login = tokenIsLogin.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Name).Value;
-                UserMinimalDTO userDTO = _mapper.Map<UserMinimalDTO>(_context.Users.FirstOrDefault(l => l.Login == login));
-                var response = new
-                {
-                    userJson = userDTO
-                };
+                UserMinimalDTO userDTO = _mapper.Map<UserMinimalDTO>(_context.Users.FirstOrDefault(l => l.Login == TokenIsLogin()));
+                var response = new { userJson = userDTO };
                 return Ok(response);
             }
             catch { return Conflict(); }
-
         }
+        
         /// <summary>
         /// POST-метод для аутентификации пользователя по логину и паролю
         /// </summary>

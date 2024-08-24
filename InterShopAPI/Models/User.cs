@@ -25,6 +25,7 @@ namespace InterShopAPI.Models
         public string? Password { get; set; } // Хеш пароля
         public int RoleId { get; set; }
         public Role? Role { get; set; }
+        public bool InstanseMail { get; set; } 
     }   
     
 }

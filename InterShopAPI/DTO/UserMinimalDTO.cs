@@ -9,5 +9,6 @@ namespace InterShopAPI.DTO
     {
         public string Login { get; set; }
         public string? Mail { get; set; } // Почта
+        public bool InstanseMail { get; set; } 
     }
 }
