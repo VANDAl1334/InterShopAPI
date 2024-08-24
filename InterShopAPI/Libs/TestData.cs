@@ -289,56 +289,48 @@ namespace InterShopAPI.Libs
                 new ProductVariantCharacteristics { ProductVariantID = 1, CharacteristicID = 3, Value = "Intel Pentium 4 301" },
                 new ProductVariantCharacteristics { ProductVariantID = 1, CharacteristicID = 4, Value = "AMD Radeon HD 6570" },
                 new ProductVariantCharacteristics { ProductVariantID = 1, CharacteristicID = 5, Value = "100" },
-                new ProductVariantCharacteristics { ProductVariantID = 1, CharacteristicID = 6, Value = "10000" },
 
                 new ProductVariantCharacteristics { ProductVariantID = 2, CharacteristicID = 1, Value = "32" },
                 new ProductVariantCharacteristics { ProductVariantID = 2, CharacteristicID = 2, Value = "1024" },
                 new ProductVariantCharacteristics { ProductVariantID = 2, CharacteristicID = 3, Value = "Intel Core I9 12600" },
                 new ProductVariantCharacteristics { ProductVariantID = 2, CharacteristicID = 4, Value = "AMD Radeon HD 6570" },
                 new ProductVariantCharacteristics { ProductVariantID = 2, CharacteristicID = 5, Value = "150" },
-                new ProductVariantCharacteristics { ProductVariantID = 2, CharacteristicID = 6, Value = "15000" },
 
                 new ProductVariantCharacteristics { ProductVariantID = 3, CharacteristicID = 1, Value = "8" },
                 new ProductVariantCharacteristics { ProductVariantID = 3, CharacteristicID = 2, Value = "512" },
                 new ProductVariantCharacteristics { ProductVariantID = 3, CharacteristicID = 3, Value = "Intel Pentium 4 301" },
                 new ProductVariantCharacteristics { ProductVariantID = 3, CharacteristicID = 4, Value = "Intel Graphics 436" },
                 new ProductVariantCharacteristics { ProductVariantID = 3, CharacteristicID = 5, Value = "80" },
-                new ProductVariantCharacteristics { ProductVariantID = 3, CharacteristicID = 6, Value = "80000" },
 
                 new ProductVariantCharacteristics { ProductVariantID = 4, CharacteristicID = 1, Value = "16" },
                 new ProductVariantCharacteristics { ProductVariantID = 4, CharacteristicID = 2, Value = "512" },
                 new ProductVariantCharacteristics { ProductVariantID = 4, CharacteristicID = 3, Value = "AMD Ryzen 5 R104" },
                 new ProductVariantCharacteristics { ProductVariantID = 4, CharacteristicID = 4, Value = "AMD Radeon HD 6570" },
                 new ProductVariantCharacteristics { ProductVariantID = 4, CharacteristicID = 5, Value = "110" },
-                new ProductVariantCharacteristics { ProductVariantID = 4, CharacteristicID = 6, Value = "11000" },
 
                 new ProductVariantCharacteristics { ProductVariantID = 5, CharacteristicID = 1, Value = "16" },
                 new ProductVariantCharacteristics { ProductVariantID = 5, CharacteristicID = 2, Value = "512" },
                 new ProductVariantCharacteristics { ProductVariantID = 5, CharacteristicID = 3, Value = "AMD Ryzen 5 R104" },
                 new ProductVariantCharacteristics { ProductVariantID = 5, CharacteristicID = 4, Value = "NVidia GTX 4090" },
                 new ProductVariantCharacteristics { ProductVariantID = 5, CharacteristicID = 5, Value = "160" },
-                new ProductVariantCharacteristics { ProductVariantID = 5, CharacteristicID = 6, Value = "16000" },
 
                 new ProductVariantCharacteristics { ProductVariantID = 6, CharacteristicID = 1, Value = "8" },
                 new ProductVariantCharacteristics { ProductVariantID = 6, CharacteristicID = 2, Value = "512" },
                 new ProductVariantCharacteristics { ProductVariantID = 6, CharacteristicID = 3, Value = "Intel Pentium 4 301" },
                 new ProductVariantCharacteristics { ProductVariantID = 6, CharacteristicID = 4, Value = "AMD Radeon HD 6570" },
                 new ProductVariantCharacteristics { ProductVariantID = 6, CharacteristicID = 5, Value = "90" },
-                new ProductVariantCharacteristics { ProductVariantID = 6, CharacteristicID = 6, Value = "90000" },
 
                 new ProductVariantCharacteristics { ProductVariantID = 7, CharacteristicID = 1, Value = "8" },
                 new ProductVariantCharacteristics { ProductVariantID = 7, CharacteristicID = 2, Value = "512" },
                 new ProductVariantCharacteristics { ProductVariantID = 7, CharacteristicID = 3, Value = "Intel Pentium 4 301" },
                 new ProductVariantCharacteristics { ProductVariantID = 7, CharacteristicID = 4, Value = "AMD Radeon HD 6570" },
                 new ProductVariantCharacteristics { ProductVariantID = 7, CharacteristicID = 5, Value = "90" },
-                new ProductVariantCharacteristics { ProductVariantID = 7, CharacteristicID = 6, Value = "90000" },
 
                 new ProductVariantCharacteristics { ProductVariantID = 8, CharacteristicID = 1, Value = "8" },
                 new ProductVariantCharacteristics { ProductVariantID = 8, CharacteristicID = 2, Value = "512" },
                 new ProductVariantCharacteristics { ProductVariantID = 8, CharacteristicID = 3, Value = "Intel Pentium 4 301" },
                 new ProductVariantCharacteristics { ProductVariantID = 8, CharacteristicID = 4, Value = "AMD Radeon HD 6570" },
-                new ProductVariantCharacteristics { ProductVariantID = 8, CharacteristicID = 5, Value = "90" },
-                new ProductVariantCharacteristics { ProductVariantID = 8, CharacteristicID = 6, Value = "70000" },
+                new ProductVariantCharacteristics { ProductVariantID = 8, CharacteristicID = 5, Value = "90" }
             });
 
             context.SaveChanges();

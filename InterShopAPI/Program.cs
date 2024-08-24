@@ -32,7 +32,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
             ValidateLifetime = true,
             IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
-            ValidateIssuerSigningKey = true,
+            ValidateIssuerSigningKey = false,
         };
     });
 builder.Services.AddAuthorization();
@@ -63,7 +63,7 @@ public class AuthOptions
 {
     public const string ISSUER = "InterShop"; 
     public const string AUDIENCE = "InterShopClient"; 
-    const string KEY = "mysupersecret_secretkey!123";  
+    const string KEY = "mysupersecret_secretsecretsecretsecretkey!123";  
     public static SymmetricSecurityKey GetSymmetricSecurityKey() =>
         new SymmetricSecurityKey(Encoding.UTF8.GetBytes(KEY));
 }

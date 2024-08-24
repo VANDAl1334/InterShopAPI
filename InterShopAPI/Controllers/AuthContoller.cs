@@ -133,7 +133,7 @@ namespace InterShopAPI.Controllers
                 audience: AuthOptions.AUDIENCE,
                 claims: claims,
                 expires: DateTime.UtcNow.Add(TimeSpan.FromDays(2)),
-                signingCredentials: new SigningCredentials(LibJWT.ExtendKeyLengthIfNeeded(AuthOptions.GetSymmetricSecurityKey(), 256), SecurityAlgorithms.HmacSha256)
+                signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256)
             );
 
             // Запись токена и получение хэша токена

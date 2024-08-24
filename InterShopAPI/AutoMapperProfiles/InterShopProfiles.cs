@@ -18,12 +18,13 @@ public class InterShopProfiles : Profile
         CreateMap<PriceHistory, PriceHistoryDTO>();
         CreateMap<DiscountHistory, DiscountHistoryDTO>();
         CreateMap<ProductVariantCharacteristics, ProductVariantCharacteristicsDTO>()
-            .ForMember(dest => dest.Characteristic, option => option.MapFrom(src => src.Characteristic.Name));
+            .ForMember(dest => dest.Characteristic, option => option.MapFrom(src => src.Characteristic.Name))
+            .ForMember(dest => dest.Unit, option => option.MapFrom(src => src.Characteristic.Unit.Name));
         CreateMap<User, UserMinimalDTO>();
         CreateMap<User, UserDetailDTO>()
             .ForMember(dest => dest.RoleName, option => option.MapFrom(src => src.Role.Name))
             .ReverseMap(); 
         CreateMap<Comment, CommentDTO>()
-            .ForMember(dest => dest.Login, option => option.MapFrom(src => src.User.Login));
+            .ForMember(dest => dest.Login, option => option.MapFrom(src => src.User.Login)).ReverseMap();
     }
 }

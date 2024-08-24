@@ -56,7 +56,7 @@ public class ProductController : ControllerBase
         Product? product = _context.Products
             .Where(p => p.Id == id)
             .Include(p => p.ProductVariants)
-                    .ThenInclude(p => p.ProductVariantCharacteristics).ThenInclude(p => p.Characteristic)
+                    .ThenInclude(p => p.ProductVariantCharacteristics).ThenInclude(p => p.Characteristic).ThenInclude(p => p.Unit)
             .Include(p => p.ProductVariants)
                 .ThenInclude(p => p.PriceHistories)
             .Include(p => p.ImagesOfProduct)
