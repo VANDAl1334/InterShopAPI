@@ -7,6 +7,7 @@
 // HttpStatus указатель статуса http
 // [] - массив
 // В GET запросах без указания данных json в headers => Шаблон "api/{controller}?{parameter}={string}"
+// {} - указатель интерполяции
 [Route]
 Auth
 {
@@ -30,12 +31,12 @@ Auth
     {
         headers: {
         "Content-Type": "application/json",
-        "Authorization": "Bearer TokenKey"
+        "Authorization": "Bearer {TokenKey}"
         }
     }
     response
     {        
-        HttpStatus(Ok(200) || Conflict(409))
+        HttpStatus(Ok(200) || BadRequest(400) || Conflict(409))
         UserMinimalDTO
         {
             bool instanseMail
@@ -141,7 +142,7 @@ Product
                 string categoryName,
                 string previewPath,
                 bool isDeleted,
-                bool onSale": true,
+                bool onSale: true,
                 int rating,
 
                 discountHistories
@@ -219,7 +220,7 @@ Product
         string categoryName,
         string previewPath,
         bool isDeleted,
-        bool onSale": true,
+        bool onSale: true,
         int rating,
 
         discountHistories
