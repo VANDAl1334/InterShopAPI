@@ -2,6 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using InterShopAPI.Controllers;
 
 namespace InterShopAPI.Libs
 {
@@ -358,17 +359,19 @@ namespace InterShopAPI.Libs
         public static void AddUsers(InterShopContext? context = null)
         {
             User user = new User();
-            string password = "123123123123";
+            string password = "pmWkWSBCL51Bfkhn79xPuKBKHz//H6B+mY6G9/eieuM="; //123
 
             user.Login = "Test";
             user.Mail = "test@mail.ru";
             user.RoleId = 1;
-            using (var sha = new SHA256Managed())
-            {
-                byte[] textData = Encoding.UTF8.GetBytes(password);
-                user.Password = byteArrayToString(sha.ComputeHash(textData));
-            }
+            user.Password = LibJWT.AppendSalt(password);            
+            User userAdmin = new();            
+            userAdmin.Login = "TestAdmin";
+            userAdmin.Mail = "tes@mail.ru";
+            userAdmin.RoleId = 3;
+            userAdmin.Password = LibJWT.AppendSalt(password);
             context.Users.Add(user);
+            context.Users.Add(userAdmin);
             context.SaveChangesAsync();
         }
 

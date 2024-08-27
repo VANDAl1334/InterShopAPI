@@ -1,0 +1,298 @@
+// Документация на программный интерфейс InterShop
+// Для использования методов, помеченных тегом [Authorized] необходимо в запросе указывать следующие заголовки:
+// "Accept": "application/json",
+// "Authorization": "Bearer " + token
+// где token - значение токена, передаваемое сервером после успешной аутентификации
+// [Route] указатель маршрута api
+// HttpStatus указатель статуса http
+// [] - массив
+// В GET запросах без указания данных json в headers => Шаблон "api/{controller}?{parameter}={string}"
+[Route]
+Auth
+{
+    [POST] Register
+    request
+    {
+        UserDetailDTO
+        {
+            string login
+            string mail
+            string password
+        }
+    }
+    response
+    {
+        HttpStatus(Created(201))
+    }
+=========================================================
+    [GET] Authorize
+    request
+    {
+        headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer TokenKey"
+        }
+    }
+    response
+    {        
+        HttpStatus(Ok(200) || Conflict(409))
+        UserMinimalDTO
+        {
+            bool instanseMail
+            string login
+            string mail
+        }
+    }
+=========================================================
+    [GET] LoginExists
+    {
+        request
+        {
+            string login
+        }
+        response
+        {
+            HttpStatus(Ok(200) || Conflict(409))   
+        }
+    }
+=========================================================
+    [POST] Login
+    {
+        request
+        {
+            authUser
+            {
+                public string login
+                public string password
+            }            
+        }    
+        response
+        {
+            HttpStatus(Accepted(202) || NotFound(404))
+            string accessToken 
+        }
+    }
+    
+}
+[Route]
+User
+{
+    [GET] 
+    request
+    {
+        string roleName
+    }
+    response
+    {
+        [
+            int id
+            bool instanseMail
+            string login
+            string mail
+            string password
+            string roleName
+        ]
+    }
+=========================================================
+    [GET /{id}]
+    request
+    {
+        int id
+    }
+    response
+    {
+        int id
+        bool instanseMail: false
+        string login
+        string mail
+        string password
+        string roleName
+    }
+=========================================================
+    [PUT /{id}]
+    request
+    {
+        int id
+    }
+}
+[Route]
+Product
+{
+    [GET]
+    request
+    {
+        int categoryId,
+        bool deleted,
+        bool notSales,
+        bool discountOnly,
+        bool variants,
+        bool allImages,
+        string nameFilter
+    }
+    response
+    {
+        HttpStatus(Ok(200)),
+
+        [
+            {
+                int id,
+                string name,
+                string description,
+                string categoryName,
+                string previewPath,
+                bool isDeleted,
+                bool onSale": true,
+                int rating,
+
+                discountHistories
+                [
+                    {
+                        string dateFrom,
+                        string dateTo,
+                        string discount
+                    }
+                    ...
+                ],
+
+                productVariants
+                [
+                    {
+                        int id,
+                        string name,
+                        isDeleted,
+                        isMain,
+                        priceHistories
+                        [
+                            {
+                                string date,
+                                float price
+                            },
+                            ...
+                        ],
+                        productVariantCharacteristics
+                        [
+                            {
+                                string characteristic,
+                                string value,
+                                string unit
+                            }
+                            ...
+                        ]
+                    },
+                    ...
+                ],
+
+                imagesOfProduct
+                [
+                    {
+                        string path
+                    }
+                ],
+
+                comments
+                [
+                    {
+                        string login,
+                        string message,
+                        float rating,
+                        int productId
+                    }
+                ]
+            },
+        ]
+    }
+
+=========================================================
+
+    [GET /{id}]
+    request
+    {
+        int id
+    }
+    response
+    {
+        HttpStatus(Ok(200)),
+
+        int id,
+        string name,
+        string description,
+        string categoryName,
+        string previewPath,
+        bool isDeleted,
+        bool onSale": true,
+        int rating,
+
+        discountHistories
+        [
+            {
+                string dateFrom,
+                string dateTo,
+                string discount
+            }
+            ...
+        ],
+
+        productVariants
+        [
+            {
+                int id,
+                string name,
+                isDeleted,
+                isMain,
+                priceHistories
+                [
+                    {
+                        string date,
+                        float price
+                    },
+                    ...
+                ],
+                productVariantCharacteristics
+                [
+                    {
+                        string characteristic,
+                        string value,
+                        string unit
+                    }
+                    ...
+                ]
+            },
+            ...
+        ],
+
+        imagesOfProduct
+        [
+            {
+                string path
+            }
+        ],
+
+        comments
+        [
+            {
+                string login,
+                string message,
+                float rating,
+                int productId
+            }
+        ]
+    }
+}
+
+
+[Route]
+Comment
+{
+    [POST]
+    request
+    {
+        string login,
+        string message,
+        float rating,
+        int productId
+    }
+    response
+    {
+        HttpStatus(Created(201) || BadRequest(400))
+    }
+}

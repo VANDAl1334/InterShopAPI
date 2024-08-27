@@ -5,17 +5,17 @@ using System.Diagnostics.CodeAnalysis;
 using System.IdentityModel.Tokens.Jwt;
 using System.Runtime.InteropServices;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.IdentityModel.Tokens;
-
+using Microsoft.EntityFrameworkCore;
 namespace InterShopAPI.Models
-{
+{    
     public class User
     {
         /// <summary>
         /// Модель пользователя с его свойствами
-        /// </summary>
+        /// </summary>        
         public int Id { get; set; }
-
         [StringLength(30, ErrorMessage = "Минимум 4 символа", MinimumLength = 4)]
         public string Login { get; set; }
         [StringLength(50, ErrorMessage = "Минимум 6 символов", MinimumLength = 6)]
@@ -26,6 +26,7 @@ namespace InterShopAPI.Models
         public int RoleId { get; set; }
         public Role? Role { get; set; }
         public bool InstanseMail { get; set; } 
+        public bool IsDeleted { get; set; }
     }   
     
 }

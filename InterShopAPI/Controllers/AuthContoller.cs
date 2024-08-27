@@ -17,6 +17,7 @@ using InterShopAPI.Libs;
 using NuGet.Protocol;
 using InterShopAPI.DTO;
 using AutoMapper;
+using System.Security.Cryptography;
 
 namespace InterShopAPI.Controllers
 {
@@ -48,18 +49,18 @@ namespace InterShopAPI.Controllers
         public async Task<ActionResult<User>> Register(UserDetailDTO userDTO)
         {
             User user = _mapper.Map<User>(userDTO);
-            user.Password = byteArrayToString(Convert.FromBase64String(user.Password));
+            user.Password = LibJWT.AppendSalt(user.Password);
             user.Role = _context.Roles.FirstOrDefault(u => u.Name == "User");
             user.InstanseMail = false;
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
             return Created();
         }
-        [HttpPost]
+        [HttpGet]
         [Route("LoginExists")]
-        public async Task<ActionResult<User>> LoginExists(User user)
+        public async Task<ActionResult<User>> LoginExists(string login)
         {
-            if (_context.Users.Any(u => u.Login == user.Login))
+            if (_context.Users.Any(u => u.Login == login))
                 return Conflict();
             else
                 return Ok();
@@ -70,38 +71,32 @@ namespace InterShopAPI.Controllers
         /// </summary>
         /// <param name="array"><Массив байт/param>
         /// <returns>Строка</returns>/
-        private string byteArrayToString(byte[] array)
-        {
-            StringBuilder builder = new StringBuilder();
-            foreach (byte num in array)
-            {
-                builder.Append(num);
-            }
+        // private string byteArrayToString(byte[] array)
+        // {
+        //     StringBuilder builder = new StringBuilder();
+        //     foreach (byte num in array)
+        //     {
+        //         builder.Append(num);
+        //     }
 
-            return builder.ToString();
-        }
-        public string TokenIsLogin()
-        {
-            string TokenKey = Request.Headers["Authorization"];
-            TokenKey = TokenKey.Replace("Bearer ", "");
-            JwtSecurityTokenHandler tokenHandler = new();
-            JwtSecurityToken tokenIsLogin = tokenHandler.ReadJwtToken(TokenKey);
-            string login = tokenIsLogin.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Name).Value;
-            return login;
-        }
+        //     return builder.ToString();
+        // }
+
         [HttpGet]
         [Route("Authorize")]
         public ActionResult Authorize()
         {
             try
             {
-                UserMinimalDTO userDTO = _mapper.Map<UserMinimalDTO>(_context.Users.FirstOrDefault(l => l.Login == TokenIsLogin()));
+                string TokenKey = Request.Headers["Authorization"];
+                UserMinimalDTO userDTO = _mapper.Map<UserMinimalDTO>(_context.Users.FirstOrDefault(l => l.Login == LibJWT.TokenIsLogin(TokenKey)));
                 var response = new { userJson = userDTO };
                 return Ok(response);
+
             }
             catch { return Conflict(); }
         }
-        
+
         /// <summary>
         /// POST-метод для аутентификации пользователя по логину и паролю
         /// </summary>
@@ -114,19 +109,16 @@ namespace InterShopAPI.Controllers
         [Route("Login")]
         public async Task<ActionResult> Login(UserDetailDTO? userDTO)
         {
-            string passwordString = byteArrayToString(Convert.FromBase64String(userDTO.Password));
             User user = new();
             // Поикс пользователя в БД по логину и хэшу пароля
-            user = await _context.Users.FirstOrDefaultAsync(x => x.Login == userDTO.Login && x.Password == passwordString);
+            user = await _context.Users.FirstOrDefaultAsync(x => x.Login == userDTO.Login && x.Password == LibJWT.AppendSalt(userDTO.Password));
 
             // Если пользователь не найден - возвращается код 404
             if (user == null)
-            {
                 return NotFound();
-            }
 
             // Если пользователь найден - создаётся токен
-            List<Claim> claims = new List<Claim>() { new Claim(ClaimTypes.Name, user.Login) };
+            List<Claim> claims = new List<Claim>() { new(ClaimTypes.Name, user.Login) };
 
             JwtSecurityToken token = new(
                 issuer: AuthOptions.ISSUER,
@@ -142,10 +134,10 @@ namespace InterShopAPI.Controllers
             // Передача хэша токена и информации о пользователе в ответ
             var response = new
             {
-                accessToken = encodedJwt,
+                accessToken = encodedJwt
             };
             // HttpContext.Response.Cookies.Append("alalhToken", accessToken); //добавление token в Cookie        
-            return AcceptedAtAction("Login", new { id = user.Id }, response);
+            return Accepted(response);
         }
     }
 }

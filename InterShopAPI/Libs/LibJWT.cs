@@ -2,7 +2,9 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using InterShopAPI.Models;
 using Microsoft.IdentityModel.Tokens;
-
+using Microsoft.AspNetCore.Http;
+using System.Security.Cryptography;
+using System.Text;
 namespace InterShopAPI.Libs
 {
     public static class LibJWT
@@ -37,5 +39,29 @@ namespace InterShopAPI.Libs
         //         return false;            
         //     return true;
         // }
+        public static string TokenIsLogin(string TokenKey)
+        {            
+            TokenKey = TokenKey.Replace("Bearer ", "");
+            if (TokenKey == "undefined" || TokenKey == null)
+                return null;
+            JwtSecurityTokenHandler tokenHandler = new();
+            JwtSecurityToken tokenIsLogin = tokenHandler.ReadJwtToken(TokenKey);
+            string login = tokenIsLogin.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Name).Value;
+            return login;
+        }
+        public static string AppendSalt(string password)
+        {
+            string saltPassword = password + "S0m3Stat1cSalt!";
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(saltPassword));
+                StringBuilder builder = new();
+                foreach (byte b in bytes)
+                {
+                    builder.Append(b.ToString("x2"));
+                }
+                return builder.ToString();
+            }
+        }
     }
 }
