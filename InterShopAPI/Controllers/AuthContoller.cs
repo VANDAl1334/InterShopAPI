@@ -80,7 +80,8 @@ namespace InterShopAPI.Controllers
 
             return builder.ToString();
         }
-        public string TokenIsLogin()
+
+        private string TokenIsLogin()
         {
             string TokenKey = Request.Headers["Authorization"];
             TokenKey = TokenKey.Replace("Bearer ", "");
@@ -89,6 +90,7 @@ namespace InterShopAPI.Controllers
             string login = tokenIsLogin.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Name).Value;
             return login;
         }
+
         [HttpGet]
         [Route("Authorize")]
         public ActionResult Authorize()
