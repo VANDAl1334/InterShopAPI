@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+using System.Text;
 using AutoMapper;
 using InterShopAPI.DTO;
 using InterShopAPI.Models;
@@ -30,6 +32,20 @@ public class CommentController : ControllerBase
         comment.User = user;
         comment.UserId = user.Id;
         comment.DateTime = DateTime.UtcNow;
+
+        var context = new ValidationContext(comment);
+        var results = new List<ValidationResult>();
+
+        if(!Validator.TryValidateObject(comment, context, results, true))
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            foreach(var error in results)
+            {
+                stringBuilder.AppendLine(error.ErrorMessage);
+            }
+
+            return BadRequest(stringBuilder.ToString());
+        }
 
         if(_context.Comments.Any(p => p.User == user && p.Product == product))
         {
