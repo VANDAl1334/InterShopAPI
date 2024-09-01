@@ -24,18 +24,20 @@ Auth
     {
         HttpStatus(Created(201))
     }
+
 =========================================================
+
     [GET] Authorize
     request
     {
         headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer TokenKey"
+            "Content-Type": "application/json",
+            "Authorization": "Bearer TokenKey"
         }
     }
     response
     {        
-        HttpStatus(Ok(200) || Conflict(409))
+        HttpStatus(Ok(200) || Conflict(409) || BadRequest(400))
         UserMinimalDTO
         {
             bool instanseMail
@@ -43,7 +45,9 @@ Auth
             string mail
         }
     }
+
 =========================================================
+
     [GET] LoginExists
     {
         request
@@ -55,7 +59,9 @@ Auth
             HttpStatus(Ok(200) || Conflict(409))   
         }
     }
+
 =========================================================
+
     [POST] Login
     {
         request
@@ -74,6 +80,7 @@ Auth
     }
     
 }
+
 [Route]
 User
 {
@@ -81,6 +88,10 @@ User
     request
     {
         string roleName
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer TokenKey"
+        }
     }
     response
     {
@@ -93,26 +104,61 @@ User
             string roleName
         ]
     }
+
 =========================================================
+
     [GET /{id}]
     request
     {
         int id
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer TokenKey"
+        }
     }
     response
     {
         int id
-        bool instanseMail: false
+        bool instanseMail
         string login
         string mail
         string password
         string roleName
     }
+
 =========================================================
-    [PUT /{id}]
+
+    [PATCH]
     request
     {
-        int id
+        string loginDTO
+        string mail
+        string password
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer TokenKey"
+        }
+    }
+    response
+    {
+        HttpStatus(NoContent(204) || BadRequest(400) || NotFound(404))
+    }
+
+=========================================================
+
+    [DELETE]
+    request
+    {
+        string loginDTO
+        string isDeleting
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer TokenKey"
+        }
+        response
+        {
+            HttpStatus(NoContent(204) || BadRequest(400) || NotFound(404))
+        }
     }
 }
 [Route]
@@ -141,7 +187,7 @@ Product
                 string categoryName,
                 string previewPath,
                 bool isDeleted,
-                bool onSale": true,
+                bool onSale: true,
                 int rating,
 
                 discountHistories
@@ -219,7 +265,7 @@ Product
         string categoryName,
         string previewPath,
         bool isDeleted,
-        bool onSale": true,
+        bool onSale: true,
         int rating,
 
         discountHistories

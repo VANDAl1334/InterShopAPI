@@ -40,7 +40,7 @@ namespace InterShopAPI.Libs
         //     return true;
         // }
         public static string TokenIsLogin(string TokenKey)
-        {            
+        {
             TokenKey = TokenKey.Replace("Bearer ", "");
             if (TokenKey == "undefined" || TokenKey == null)
                 return null;
