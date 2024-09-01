@@ -83,18 +83,20 @@ namespace InterShopAPI.Controllers
         // }
 
         [HttpGet]
+        [Authorize]
         [Route("Authorize")]
-        public ActionResult Authorize()
+        public async Task<ActionResult> Authorize()
         {
             try
-            {                
-                string TokenKey = Request.Headers["Authorization"];                
-                UserMinimalDTO userDTO = _mapper.Map<UserMinimalDTO>(_context.Users.FirstOrDefault(l => l.Login == LibJWT.TokenIsLogin(TokenKey)));
-                if(userDTO == null)
+            {
+                User user = await _context.Users.FirstOrDefaultAsync(l => l.Login == LibJWT.TokenIsLogin(Request.Headers["Authorization"]));
+                if (user.IsDeleted)
+                    return BadRequest();
+                UserMinimalDTO userDTO = _mapper.Map<UserMinimalDTO>(user);
+                if (userDTO == null)
                     return BadRequest();
                 var response = new { userJson = userDTO };
                 return Ok(response);
-
             }
             catch { return Conflict(); }
         }
@@ -111,14 +113,13 @@ namespace InterShopAPI.Controllers
         [Route("Login")]
         public async Task<ActionResult> Login(UserDetailDTO? userDTO)
         {
-            User user = new();
-            // Поикс пользователя в БД по логину и хэшу пароля
-            user = await _context.Users.FirstOrDefaultAsync(x => x.Login == userDTO.Login && x.Password == LibJWT.AppendSalt(userDTO.Password));
-
+            // Поикс пользователя в БД по логину и хэшу пароля            
+            User user = await _context.Users.FirstOrDefaultAsync(x => x.Login == userDTO.Login && x.Password == LibJWT.AppendSalt(userDTO.Password));            
             // Если пользователь не найден - возвращается код 404
             if (user == null)
                 return NotFound();
-
+            if (user.IsDeleted)
+                return BadRequest();
             // Если пользователь найден - создаётся токен
             List<Claim> claims = new List<Claim>() { new(ClaimTypes.Name, user.Login) };
 
