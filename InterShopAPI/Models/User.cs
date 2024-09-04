@@ -27,6 +27,8 @@ namespace InterShopAPI.Models
         public Role? Role { get; set; }
         public bool InstanseMail { get; set; } 
         public bool IsDeleted { get; set; }
+
+        public ICollection<FavouriteProduct> FavouriteProducts { get; set;}
     }   
     
 }

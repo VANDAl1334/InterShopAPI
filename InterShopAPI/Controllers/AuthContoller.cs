@@ -90,6 +90,8 @@ namespace InterShopAPI.Controllers
             {
                 string TokenKey = Request.Headers["Authorization"];
                 UserMinimalDTO userDTO = _mapper.Map<UserMinimalDTO>(_context.Users.FirstOrDefault(l => l.Login == LibJWT.TokenIsLogin(TokenKey)));
+                if(userDTO == null)
+                    return Conflict();
                 var response = new { userJson = userDTO };
                 return Ok(response);
 
