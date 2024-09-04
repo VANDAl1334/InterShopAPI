@@ -100,6 +100,7 @@ namespace InterShopAPI.Models
             modelBuilder.Entity<User>().HasIndex(u => u.Login).IsUnique();
             // настройка внешнего ключа, ссылающийся на свою же таблицу
             modelBuilder.Entity<Category>().HasOne(e => e.Parent).WithMany(e => e.Children).OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<FavouriteProduct>().HasKey(u => new { u.ProductId, u.UserId });
         }
     }
 }
