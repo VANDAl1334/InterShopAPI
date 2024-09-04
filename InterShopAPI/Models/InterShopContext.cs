@@ -29,6 +29,8 @@ namespace InterShopAPI.Models
         // Пользователи
         public DbSet<User> Users { get; set; } = null!;
         public DbSet<Role> Roles { get; set; } = null!;
+        public DbSet<Basket> Baskets { get; set;}
+        public DbSet<FavouriteProduct> FavouriteProducts { get; set; }
 
         // Товары
         public DbSet<Product> Products { get; set; }
@@ -94,12 +96,14 @@ namespace InterShopAPI.Models
             modelBuilder.Entity<CategoryCharacteristics>().HasKey(u => new { u.CategoryId, u.CharacteristicId });
             modelBuilder.Entity<ProductVariantCharacteristics>().HasKey(u => new { u.CharacteristicID, u.ProductVariantID });
             modelBuilder.Entity<Basket>().HasKey(u => new { u.ProductVariantId, u.UserId });
+            modelBuilder.Entity<FavouriteProduct>().HasKey(u => new { u.ProductId, u.UserId });
             modelBuilder.Entity<OrderDetails>().HasKey(u => new { u.ProductVariantId, u.OrderId });
             modelBuilder.Entity<ProductVariantStocks>().HasKey(u => new { u.ProductVariantId, u.StockId });
             modelBuilder.Entity<User>().HasIndex(u => u.Mail).IsUnique();
             modelBuilder.Entity<User>().HasIndex(u => u.Login).IsUnique();
             // настройка внешнего ключа, ссылающийся на свою же таблицу
             modelBuilder.Entity<Category>().HasOne(e => e.Parent).WithMany(e => e.Children).OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<FavouriteProduct>().HasKey(u => new { u.ProductId, u.UserId });
         }
     }
 }

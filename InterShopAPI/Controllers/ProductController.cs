@@ -22,7 +22,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpGet()]
-    public IActionResult GetProducts(int? categoryId, bool deleted, bool notSales, bool discountOnly, bool variants, bool allImages, string? nameFilter)
+    public IActionResult GetProducts(int? categoryId, bool deleted, bool notSales, bool discountOnly, string? nameFilter)
     {
         if (categoryId == null)
             categoryId = 0;
@@ -35,17 +35,14 @@ public class ProductController : ControllerBase
                 && (p.Name.ToLower().Contains(nameFilter.ToLower()) || (nameFilter == string.Empty))
                 && (p.IsDeleted == false || deleted)
                 && (p.OnSale == true || notSales))
-                .Include(p => p.ProductVariants.Where(p => p.IsMain || variants))
-                    .ThenInclude(p => p.ProductVariantCharacteristics).ThenInclude(p => p.Characteristic)
-                .Include(p => p.ProductVariants.Where(p => p.IsMain || variants))
+                .Include(p => p.ProductVariants.Where(p => p.IsMain))
                     .ThenInclude(p => p.PriceHistories)
-                .Include(p => p.ImagesOfProduct.Where(p => allImages))
                 .Include(p => p.Category)
                 .Include(p => p.DiscountHistories)
             .Where(p => p.DiscountHistories
                 .Any(d => d.DateFrom <= DateOnly.FromDateTime(DateTime.Now) && d.DateTo >= DateOnly.FromDateTime(DateTime.Now)) || !discountOnly);
 
-        IEnumerable<ProductDTO> productsDto = _mapper.Map<IEnumerable<ProductDTO>>(products);
+        IEnumerable<ProductMinimalDTO> productsDto = _mapper.Map<IEnumerable<ProductMinimalDTO>>(products);
 
         return Ok(productsDto);
     }
@@ -66,7 +63,7 @@ public class ProductController : ControllerBase
                 .ThenInclude(p => p.User)
             .FirstOrDefault();
 
-        ProductDTO productDto = _mapper.Map<ProductDTO>(product);
+        ProductDetailDTO productDto = _mapper.Map<ProductDetailDTO>(product);
 
         return Ok(productDto);
     }

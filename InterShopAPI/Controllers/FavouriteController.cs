@@ -55,17 +55,16 @@ public class FavouriteController : ControllerBase
             return Ok(productsId);
 
         // Получаем информацию о товарах
-        IEnumerable<Product> products = _context.Products
+        List<Product> products = _context.Products
             .Where(p => productsId.Contains(p.Id))
                     .Include(p => p.ProductVariants.Where(p => p.IsMain))
                         .ThenInclude(p => p.PriceHistories)
                     .Include(p => p.Category)
                     .Include(p => p.Comments)
                     .Include(p => p.DiscountHistories)
-                .Where(p => p.DiscountHistories
-                    .Any(d => d.DateFrom <= DateOnly.FromDateTime(DateTime.Now) && d.DateTo >= DateOnly.FromDateTime(DateTime.Now)));
+                .ToList();
 
-        return Ok(_mapper.Map<IEnumerable<ProductMinimalDTO>>(products));
+        return Ok(_mapper.Map<List<ProductMinimalDTO>>(products));
     }
 
     [HttpPut]
