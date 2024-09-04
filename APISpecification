@@ -7,6 +7,7 @@
 // HttpStatus указатель статуса http
 // [] - массив
 // В GET запросах без указания данных json в headers => Шаблон "api/{controller}?{parameter}={string}"
+// {} - указатель интерполяции
 [Route]
 Auth
 {
