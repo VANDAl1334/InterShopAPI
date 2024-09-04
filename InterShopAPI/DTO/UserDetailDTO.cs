@@ -12,7 +12,7 @@ namespace InterShopAPI.DTO
         public string? Login { get; set; }
         public string? Mail { get; set; } // Почта
         public string? Password { get; set; } // Хеш пароля
-        public string? RoleName { get; set; }
+        public string? RoleName { get; set; } = null;
         public bool? InstanseMail { get; set; } 
         public bool? IsDeleted { get; set; } 
     }

@@ -33,7 +33,7 @@ namespace InterShopAPI.Libs
             AddProductVariantCharacteristics(context);
             AddRoles(context);
             AddUsers(context);
-            AddComments(context);
+            // AddComments(context);
         }
 
         private static void AddComments(InterShopContext context)
