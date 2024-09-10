@@ -34,9 +34,27 @@ namespace InterShopAPI.Libs
             AddRoles(context);
             AddUsers(context);
             // AddComments(context);
+            AddBaskets(context);
         }
 
-        private static void AddComments(InterShopContext context)
+        public static void AddBaskets(InterShopContext context)
+        {
+            setContext(context);
+
+            context.Baskets.AddRange(
+                new List<Basket> {
+                    new Basket { ProductVariantId = 1, UserId = 1, Count = 2},
+                    new Basket { ProductVariantId = 2, UserId = 1, Count = 1},
+                    new Basket { ProductVariantId = 3, UserId = 1, Count = 3},
+                    new Basket { ProductVariantId = 4, UserId = 1, Count = 4},
+                    new Basket { ProductVariantId = 5, UserId = 1, Count = 2},
+                }
+            );
+
+            context.SaveChanges();
+        }
+
+        public static void AddComments(InterShopContext context)
         {
             context.Comments.AddRange(
                 new List<Comment>()
@@ -141,11 +159,13 @@ namespace InterShopAPI.Libs
                     Name = "Игровой компьютер #2 Про-версия"},
                 new ProductVariant { ProductID = 3,                             // 5
                     Name = "Игровой компьютер #3 Базовая версия", IsMain = true},
-                new ProductVariant { ProductID = 4,                             // 6
+                new ProductVariant { ProductID = 3,                             // 6
+                    Name = "Игровой компьютер #3 Про-версия"},
+                new ProductVariant { ProductID = 4,                             // 7
                     Name = "Офисный компьютер #1 Базовая версия", IsMain = true},
-                new ProductVariant { ProductID = 5,                             // 7
+                new ProductVariant { ProductID = 5,                             // 8
                     Name = "Офисный компьютер #2 Базовая версия", IsMain = true},
-                new ProductVariant { ProductID = 6,                             // 8
+                new ProductVariant { ProductID = 6,                             // 9
                     Name = "Офисный компьютер #3 Базовая версия", IsMain = true}
             });
 
@@ -315,11 +335,11 @@ namespace InterShopAPI.Libs
                 new ProductVariantCharacteristics { ProductVariantID = 5, CharacteristicID = 4, Value = "NVidia GTX 4090" },
                 new ProductVariantCharacteristics { ProductVariantID = 5, CharacteristicID = 5, Value = "160" },
 
-                new ProductVariantCharacteristics { ProductVariantID = 6, CharacteristicID = 1, Value = "8" },
-                new ProductVariantCharacteristics { ProductVariantID = 6, CharacteristicID = 2, Value = "512" },
-                new ProductVariantCharacteristics { ProductVariantID = 6, CharacteristicID = 3, Value = "Intel Pentium 4 301" },
-                new ProductVariantCharacteristics { ProductVariantID = 6, CharacteristicID = 4, Value = "AMD Radeon HD 6570" },
-                new ProductVariantCharacteristics { ProductVariantID = 6, CharacteristicID = 5, Value = "90" },
+                new ProductVariantCharacteristics { ProductVariantID = 6, CharacteristicID = 1, Value = "32" },
+                new ProductVariantCharacteristics { ProductVariantID = 6, CharacteristicID = 2, Value = "1024" },
+                new ProductVariantCharacteristics { ProductVariantID = 6, CharacteristicID = 3, Value = "AMD Ryzen 5 R104" },
+                new ProductVariantCharacteristics { ProductVariantID = 6, CharacteristicID = 4, Value = "NVidia GTX 8090" },
+                new ProductVariantCharacteristics { ProductVariantID = 6, CharacteristicID = 5, Value = "280" },
 
                 new ProductVariantCharacteristics { ProductVariantID = 7, CharacteristicID = 1, Value = "8" },
                 new ProductVariantCharacteristics { ProductVariantID = 7, CharacteristicID = 2, Value = "512" },
@@ -331,7 +351,13 @@ namespace InterShopAPI.Libs
                 new ProductVariantCharacteristics { ProductVariantID = 8, CharacteristicID = 2, Value = "512" },
                 new ProductVariantCharacteristics { ProductVariantID = 8, CharacteristicID = 3, Value = "Intel Pentium 4 301" },
                 new ProductVariantCharacteristics { ProductVariantID = 8, CharacteristicID = 4, Value = "AMD Radeon HD 6570" },
-                new ProductVariantCharacteristics { ProductVariantID = 8, CharacteristicID = 5, Value = "90" }
+                new ProductVariantCharacteristics { ProductVariantID = 8, CharacteristicID = 5, Value = "90" },
+
+                new ProductVariantCharacteristics { ProductVariantID = 9, CharacteristicID = 1, Value = "8" },
+                new ProductVariantCharacteristics { ProductVariantID = 9, CharacteristicID = 2, Value = "512" },
+                new ProductVariantCharacteristics { ProductVariantID = 9, CharacteristicID = 3, Value = "Intel Pentium 4 301" },
+                new ProductVariantCharacteristics { ProductVariantID = 9, CharacteristicID = 4, Value = "AMD Radeon HD 6570" },
+                new ProductVariantCharacteristics { ProductVariantID = 9, CharacteristicID = 5, Value = "90" }
             });
 
             context.SaveChanges();
@@ -364,15 +390,15 @@ namespace InterShopAPI.Libs
             user.Login = "Test";
             user.Mail = "test@mail.ru";
             user.RoleId = 1;
-            user.Password = LibJWT.AppendSalt(password);            
-            User userAdmin = new();            
+            user.Password = LibJWT.AppendSalt(password);
+            User userAdmin = new();
             userAdmin.Login = "TestAdmin";
             userAdmin.Mail = "tes@mail.ru";
             userAdmin.RoleId = 3;
             userAdmin.Password = LibJWT.AppendSalt(password);
             context.Users.Add(user);
             context.Users.Add(userAdmin);
-            context.SaveChangesAsync();
+            context.SaveChanges();
         }
 
         /// <summary>
@@ -405,9 +431,10 @@ namespace InterShopAPI.Libs
                 new PriceHistory { ProductVariantId = 3, Date = DateOnly.Parse("01-01-2022"), Price = 12045.0f },
                 new PriceHistory { ProductVariantId = 4, Date = DateOnly.Parse("01-01-2022"), Price = 12046.0f },
                 new PriceHistory { ProductVariantId = 5, Date = DateOnly.Parse("01-01-2022"), Price = 12047.0f },
-                new PriceHistory { ProductVariantId = 6, Date = DateOnly.Parse("01-01-2022"), Price = 12048.0f },
-                new PriceHistory { ProductVariantId = 7, Date = DateOnly.Parse("01-01-2022"), Price = 12049.99f },
-                new PriceHistory { ProductVariantId = 8, Date = DateOnly.Parse("01-01-2022"), Price = 14425.0f }
+                new PriceHistory { ProductVariantId = 6, Date = DateOnly.Parse("01-01-2022"), Price = 14013.0f },
+                new PriceHistory { ProductVariantId = 7, Date = DateOnly.Parse("01-01-2022"), Price = 12048.0f },
+                new PriceHistory { ProductVariantId = 8, Date = DateOnly.Parse("01-01-2022"), Price = 12049.99f },
+                new PriceHistory { ProductVariantId = 9, Date = DateOnly.Parse("01-01-2022"), Price = 14425.0f }
             });
 
             context.SaveChanges();
@@ -422,9 +449,9 @@ namespace InterShopAPI.Libs
             setContext(context);
             context.DiscountHistories.AddRange(new List<DiscountHistory>()
             {
-                new DiscountHistory { ProductId = 1, DateFrom = DateOnly.Parse("01-01-2022"), DateTo = DateOnly.Parse("01-01-2026"), Discount = 12 },
-                new DiscountHistory { ProductId = 2, DateFrom = DateOnly.Parse("01-01-2022"), DateTo = DateOnly.Parse("01-01-2026"), Discount = 20 },
-                new DiscountHistory { ProductId = 3, DateFrom = DateOnly.Parse("01-01-2019"), DateTo = DateOnly.Parse("01-01-2026"), Discount = 42 },
+                //new DiscountHistory { ProductId = 1, DateFrom = DateOnly.Parse("01-01-2022"), DateTo = DateOnly.Parse("01-01-2026"), Discount = 12 },
+                //new DiscountHistory { ProductId = 2, DateFrom = DateOnly.Parse("01-01-2022"), DateTo = DateOnly.Parse("01-01-2026"), Discount = 20 },
+                //new DiscountHistory { ProductId = 3, DateFrom = DateOnly.Parse("01-01-2019"), DateTo = DateOnly.Parse("01-01-2026"), Discount = 42 },
                 new DiscountHistory { ProductId = 4, DateFrom = DateOnly.Parse("01-01-2022"), DateTo = DateOnly.Parse("01-01-2026"), Discount = 10 },
                 new DiscountHistory { ProductId = 5, DateFrom = DateOnly.Parse("01-01-2022"), DateTo = DateOnly.Parse("01-01-2026"), Discount = 10 },
             });

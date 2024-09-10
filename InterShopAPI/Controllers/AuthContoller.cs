@@ -71,8 +71,8 @@ namespace InterShopAPI.Controllers
         /// </summary>
         /// <param name="array"><Массив байт/param>
         /// <returns>Строка</returns>/
-        // private string byteArrayToString(byte[] array)
-        // {
+        //  private string byteArrayToString(byte[] array)
+        //  {
         //     StringBuilder builder = new StringBuilder();
         //     foreach (byte num in array)
         //     {

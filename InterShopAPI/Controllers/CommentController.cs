@@ -15,7 +15,7 @@ public class CommentController : ControllerBase
     private readonly InterShopContext _context;
     private readonly IMapper _mapper;
 
-    public CommentController(InterShopContext context, IMapper mapper)
+    public CommentController(InterShopContext context, IMapper mapper) 
     {
         _context = context;
         _mapper = mapper;
