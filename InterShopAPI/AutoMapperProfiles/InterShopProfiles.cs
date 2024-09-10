@@ -9,8 +9,9 @@ public class InterShopProfiles : Profile
     public InterShopProfiles()
     {
         CreateMap<ImagesOfProduct, ImagesOfProductDTO>();
-        CreateMap<ProductVariant, ProductVariantDTO>();
-
+        CreateMap<ProductVariant, ProductVariantDetailDTO>();
+        CreateMap<ProductVariant, ProductVariantMinimalDTO>()
+            .ForMember(dest => dest.Cost, option => option.MapFrom(src => src.PriceHistories.FirstOrDefault().Price));
         CreateMap<Product, ProductDetailDTO>()
             .ForMember(dest => dest.CategoryName, option => option.MapFrom(src => src.Category.Name))
             .ForMember(dest => dest.Rating, option => option.MapFrom(src => (float)src.Comments.Sum(p => p.Rating / (float)src.Comments.Count)));
@@ -30,5 +31,10 @@ public class InterShopProfiles : Profile
             .ReverseMap();
         CreateMap<Comment, CommentDTO>()
             .ForMember(dest => dest.Login, option => option.MapFrom(src => src.User.Login)).ReverseMap();
+
+        CreateMap<Basket, BasketDTO>()
+            .ForMember(dest => dest.Product, option => option.MapFrom(src => src.ProductVariant.Product))
+            .ForMember(dest => dest.TotalCost, option => option.MapFrom(src => src.ProductVariant.PriceHistories.FirstOrDefault().Price * src.Count))
+            .ReverseMap();
     }
 }

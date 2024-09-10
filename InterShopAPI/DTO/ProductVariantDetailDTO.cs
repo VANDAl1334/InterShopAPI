@@ -2,7 +2,7 @@ using InterShopAPI.Models;
 
 namespace InterShopAPI.DTO;
 
-public class ProductVariantDTO
+public class ProductVariantDetailDTO
 {
     public int Id { get; set; }
 

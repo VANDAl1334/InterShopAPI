@@ -21,7 +21,7 @@ public class ProductDetailDTO
     public float Rating { get; set; }
 
     public ICollection<DiscountHistoryDTO> DiscountHistories { get; set; }
-    public ICollection<ProductVariantDTO> ProductVariants { get; set; }
+    public ICollection<ProductVariantDetailDTO> ProductVariants { get; set; }
     public ICollection<ImagesOfProductDTO> ImagesOfProduct { get; set; }
     public ICollection<CommentDTO> Comments { get; set; }
 }
