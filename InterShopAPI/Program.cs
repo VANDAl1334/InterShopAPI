@@ -61,9 +61,18 @@ app.Run();
 
 public class AuthOptions
 {
-    public const string ISSUER = "InterShop"; 
-    public const string AUDIENCE = "InterShopClient"; 
-    const string KEY = "mysupersecret_secretsecretsecretsecretkey!123";  
+    public const string ISSUER = "InterShop";
+    public const string AUDIENCE = "InterShopClient";
+    const string KEY = "mysupersecret_secretsecretsecretsecretkey!123";
     public static SymmetricSecurityKey GetSymmetricSecurityKey() =>
         new SymmetricSecurityKey(Encoding.UTF8.GetBytes(KEY));
+}
+
+/// <summary>
+/// Класс для описания ошибок прии работе пользователей с API
+/// </summary>
+public class ErrorMessage
+{
+    public int Code { get; set; }
+    public string Message { get; set; }
 }

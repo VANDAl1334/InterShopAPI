@@ -56,10 +56,11 @@ namespace InterShopAPI.Models
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderStatus> OrderStatuses { get; set; }
         public DbSet<PayStatus> PayStatuses { get; set; }
+        public DbSet<PaymentType> PaymentTypes { get; set; }
         public DbSet<DeliveryType> DeliveryTypes { get; set; }
 
         // Склады
-        public DbSet<Stock> Stocks { get; set; }
+        public DbSet<Shop> Shops { get; set; }
         public DbSet<ProductVariantStocks> ProductVariantStocks { get; set; }
 
         // Отзывы

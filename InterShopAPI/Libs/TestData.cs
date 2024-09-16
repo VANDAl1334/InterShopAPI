@@ -35,6 +35,134 @@ namespace InterShopAPI.Libs
             AddUsers(context);
             // AddComments(context);
             AddBaskets(context);
+            AddOrderInfo(context);
+            AddOrders(context);
+            AddShop(context);
+        }
+
+        private static void AddShop(InterShopContext context)
+        {
+            setContext(context);
+
+            context.Shops.AddRange(new List<Shop> {
+                new Shop { Address = "ул. Зиповская, 7", Longitude = 38.995674f, Latitude = 45.063859f, YandexLink = "https://yandex.ru/maps/35/krasnodar/?ll=38.997031%2C45.063108&mode=poi&poi%5Bpoint%5D=38.995674%2C45.063859&poi%5Buri%5D=ymapsbm1%3A%2F%2Forg%3Foid%3D1002617669&z=17.36"},
+                new Shop { Address = "ул. Российская, 100", Longitude = 39.025423f, Latitude = 45.120432f, YandexLink = "https://yandex.ru/maps/35/krasnodar/?ll=39.027754%2C45.121731&mode=poi&poi%5Bpoint%5D=39.025423%2C45.120432&poi%5Buri%5D=ymapsbm1%3A%2F%2Forg%3Foid%3D1239480739&z=14.72"},
+                new Shop { Address = "ул. Красная, 12", Longitude = 38.964455f, Latitude = 45.011862f, YandexLink = "https://yandex.ru/maps/org/spetsializirovannaya_klinicheskaya_psikhiatricheskaya_bolnitsa_1/8285523058/?display-text=%D0%BF%D1%81%D0%B8%D1%85%D0%B8%D0%B0%D1%82%D1%80%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B0%D1%8F%20%D0%B1%D0%BE%D0%BB%D1%8C%D0%BD%D0%B8%D1%86%D0%B0&ll=38.965700%2C45.011395&mode=search&sctx=ZAAAAAgBEAAaKAoSCdh%2BMsaHgUNAESYA%2F5QqhUZAEhIJQpjbvdwnsz8RAmISLuQRnD8iBgABAgMEBSgKOABAI0gBYh5yZWxldl9zZXJ2aWNlX2FyZWFfcGVyY2VudD0xMDBqAnJ1nQHNzEw9oAEAqAEAvQE%2Brh7qwgEQ8pjs7h73krT%2BA8P37%2BTZAYICL9C%2F0YHQuNGF0LjQsNGC0YDQuNGH0LXRgdC60LDRjyDQsdC%2B0LvRjNC90LjRhtCwigIsNTM0MzcyNjA1NTkkMTg0MTA1OTU2JDE4NDEwNTk1OCQxOTgzOTUyODk1NDKSAgCaAgxkZXNrdG9wLW1hcHOqAgwyMjQ1MTg3MTQ5NjM%3D&sll=38.968201%2C45.011395&sspn=0.013704%2C0.006857&text=%D0%BF%D1%81%D0%B8%D1%85%D0%B8%D0%B0%D1%82%D1%80%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B0%D1%8F%20%D0%B1%D0%BE%D0%BB%D1%8C%D0%BD%D0%B8%D1%86%D0%B0&z=16.72"},
+            });
+
+            context.SaveChanges();
+        }
+
+        private static void AddOrderInfo(InterShopContext context)
+        {
+            setContext(context);
+
+            context.OrderStatuses.AddRange(
+                new List<OrderStatus>
+                {
+                    new OrderStatus { Name = "Готов к выдаче" },
+                    new OrderStatus { Name = "Выдан" },
+                    new OrderStatus { Name = "В пути" },
+                    new OrderStatus { Name = "Отменён" }
+                }
+            );
+
+            context.DeliveryTypes.AddRange(
+                new List<DeliveryType>
+                {
+                    new DeliveryType { Name = "Самовывоз" },
+                    new DeliveryType { Name = "Доставка" }
+                }
+            );
+
+
+            context.PaymentTypes.AddRange(
+                new List<PaymentType>
+                {
+                    new PaymentType { Name = "Наличными" },
+                    new PaymentType { Name = "Банковской картой" }
+                }
+            );
+
+            context.PayStatuses.AddRange(
+                new List<PayStatus>
+                {
+                    new PayStatus { Name = "Оплачен" },
+                    new PayStatus { Name = "Не оплачен" }
+                }
+            );
+
+            context.SaveChanges();
+        }
+
+        private static void AddOrders(InterShopContext context)
+        {
+            setContext(context);
+
+            context.Orders.AddRange(
+                new List<Order> {
+                    new Order
+                    {
+                        UserId = 1,
+                        DateTimeCreating = DateTime.UtcNow,
+                        DeliveryDate = DateOnly.Parse("12-12-2024"),
+                        OrderStatusId = 1,
+                        DeliveryTypeId = 1,
+                        DeliveryAddress = "г. Краснодар, ул. Греновская, д.23",
+                        PaymentTypeId = 1,
+                        PayStatusId = 1,
+
+                        OrderDetails = new List<OrderDetails>
+                        {
+                            new OrderDetails
+                            {
+                                OrderId = 1,
+                                ProductVariantId = 1,
+                                Count = 2,
+                                Price = 12524.12f
+                            },
+                            new OrderDetails
+                            {
+                                OrderId = 1,
+                                ProductVariantId = 2,
+                                Count = 3,
+                                Price = 12524.12f
+                            }
+                        }
+                    },
+                    new Order
+                    {
+                        UserId = 1,
+                        DateTimeCreating = DateTime.UtcNow,
+                        DeliveryDate = DateOnly.Parse("12-12-2024"),
+                        OrderStatusId = 1,
+                        DeliveryTypeId = 1,
+                        DeliveryAddress = "г. Краснодар, ул. Греновская, д.23",
+                        PaymentTypeId = 1,
+                        PayStatusId = 1,
+
+                        OrderDetails = new List<OrderDetails>
+                        {
+                            new OrderDetails
+                            {
+                                OrderId = 1,
+                                ProductVariantId = 1,
+                                Count = 2,
+                                Price = 12524.12f
+                            },
+                            new OrderDetails
+                            {
+                                OrderId = 1,
+                                ProductVariantId = 2,
+                                Count = 4,
+                                Price = 12524.12f
+                            }
+                        }
+                    },
+                }
+            );
+
+            context.SaveChanges();
         }
 
         public static void AddBaskets(InterShopContext context)

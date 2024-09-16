@@ -15,6 +15,6 @@ namespace InterShopAPI.Models
         public int Count { get; set; }
 
         public ProductVariant ProductVariant { get; set; }
-        public Stock Stock { get; set; }
+        public Shop Shop { get; set; }
     }
 }

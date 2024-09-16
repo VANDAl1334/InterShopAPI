@@ -49,7 +49,7 @@ public class CommentController : ControllerBase
 
         if(_context.Comments.Any(p => p.User == user && p.Product == product))
         {
-            return BadRequest("Вы уже оставляли отзыв на этот товар");
+            return BadRequest(new ErrorMessage() { Code = -1, Message = "Вы уже оставляли отзыв на этот товар" } );
         }
 
         try

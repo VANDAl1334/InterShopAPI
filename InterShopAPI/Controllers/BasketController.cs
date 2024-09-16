@@ -23,7 +23,7 @@ public class BasketController : ControllerBase
 
     [HttpGet]
     [Authorize]
-    public async Task<ActionResult<BasketDTO>> GetBasket()
+    public async Task<ActionResult<IEnumerable<BasketDTO>>> GetBasket()
     {
         string tokenKey = Request.Headers["Authorization"];
         User? user = _context.Users.FirstOrDefault(u => u.Login == LibJWT.TokenIsLogin(tokenKey));
@@ -34,13 +34,13 @@ public class BasketController : ControllerBase
             return BadRequest();
         }
 
-        List<Basket> basket = _context.Baskets.Where(b => b.UserId == user.Id)
+        IEnumerable<Basket> basket = _context.Baskets.Where(b => b.UserId == user.Id)
             .Include(b => b.ProductVariant)
                 .ThenInclude(p => p.PriceHistories)
             .Include(b => b.ProductVariant)
-                .ThenInclude(p => p.Product).ThenInclude(p => p.DiscountHistories).ToList();
+                .ThenInclude(p => p.Product).ThenInclude(p => p.DiscountHistories);
 
-        List<BasketDTO> basketDTO = _mapper.Map<List<BasketDTO>>(basket);
+        IEnumerable<BasketDTO> basketDTO = _mapper.Map<IEnumerable<BasketDTO>>(basket);
 
         return Ok(basketDTO);
     }
@@ -59,6 +59,13 @@ public class BasketController : ControllerBase
         }
 
         IEnumerable<Basket> basket = _mapper.Map<IEnumerable<Basket>>(basketDTO);
+        foreach (Basket basketElement in basket)
+        {
+            basketElement.ProductVariant = null;
+        }
+
+        _context.Baskets.UpdateRange(basket);
+        await _context.SaveChangesAsync();
 
         return Ok();
     }
